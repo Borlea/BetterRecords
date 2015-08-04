@@ -30,8 +30,6 @@ import com.codingforcookies.betterrecords.src.packets.PacketHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -84,10 +82,6 @@ public class BetterRecords {
 	public static final BlockLazer blockLazer = (BlockLazer)new BlockLazer().setUnlocalizedName("lazer").setHardness(3.2F).setResistance(4.3F).setCreativeTab(recordsTab);
 	public static final BlockLazerCluster blockLazerCluster = (BlockLazerCluster)new BlockLazerCluster().setUnlocalizedName("lazercluster").setHardness(4.8F).setResistance(4.8F).setCreativeTab(recordsTab);
 	
-	//Add comparator support for blocks
-	//Add hopper support for blocks
-	//Frequency Tuner gui instantly closes
-	//Fix frequency tuner inventory model(Textures need to be readded)
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		/*glfwSetDropCallback(window, new GLFWDropCallback() {

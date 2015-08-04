@@ -78,7 +78,7 @@ public class GuiFrequencyTuner extends GuiContainer {
 		int mx = par1 - (width - xSize) / 2;
 		int my = par2 - (height - ySize) / 2;
 		fontRendererObj.drawStringWithShadow("Tune", 48, 53, (error == "Tuner ready!" ? (mx >= 44 && mx <= 75 && my >= 51 && my <= 66 ? 0xFFFF55 : 0xFFFFFF) : 0x555555));
-
+		
 		GL11.glPushMatrix();
 		{
 			GL11.glScalef(.5F, .5F, 1F);
@@ -88,7 +88,6 @@ public class GuiFrequencyTuner extends GuiContainer {
 		
 		nameField.drawTextBox();
 		urlField.drawTextBox();
-		
 		if(tileEntity.crystal == null)
 			error = "No crystal to tune";
 		else if(tileEntity.crystal.hasTagCompound() && tileEntity.crystal.getTagCompound().hasKey("url"))

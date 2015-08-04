@@ -7,17 +7,13 @@ import org.lwjgl.opengl.GL11;
 import com.codingforcookies.betterrecords.src.StaticInfo;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWireManipulator;
 import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
-import com.codingforcookies.betterrecords.src.items.BlockRecordPlayer;
 import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 
 public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 	public BlockRecordPlayerRenderer() { }
@@ -62,7 +58,7 @@ public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 	            GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY - 180F, 0F, 1F, 0F);
 
 				
-				/*if(tileEntityRecordPlayer.formTreble.size() != 0) {
+				if(tileEntityRecordPlayer.formTreble.size() != 0) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					
 					GL11.glPushMatrix();
@@ -120,8 +116,7 @@ public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 					
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					GL11.glColor3f(1F, 1F, 1F);
-				}*/
-	            
+				}
 	            
 	            GL11.glColor3f(1F, 1F, 1F);
 				int currentY = tileEntityRecordPlayer.wireSystemInfo.size() * -10 - 75;

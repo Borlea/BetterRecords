@@ -11,7 +11,6 @@ import com.codingforcookies.betterrecords.src.items.TileEntityRadio;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
@@ -54,9 +53,61 @@ public class BlockRadioRenderer extends TileEntitySpecialRenderer {
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					GL11.glColor3f(1F, 1F, 1F);
 				}
-				
 				GL11.glScalef(.01F, -.01F, .01F);
-	            GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY - 180F, 0F, 1F, 0F);
+				GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY - 180F, 0F, 1F, 0F);
+				if(tileEntityRadio.formTreble.size() != 0) {
+					GL11.glDisable(GL11.GL_TEXTURE_2D);
+					GL11.glPushMatrix();
+					{
+						try{
+							GL11.glColor3f(0F, 1F, 1F);
+							float increment = 25F;
+							int waveSize = tileEntityRadio.formTreble.size();
+							float oldX = -50F;
+							float oldY = -125F;
+							float xIndex = -50;
+							for(int i = 0; i < waveSize; i += increment){
+								if(tileEntityRadio.formTreble.size() < i) break;
+								float scaledSample = tileEntityRadio.formTreble.get(i);
+								float yIndex = scaledSample - 125F;
+								GL11.glBegin(GL11.GL_LINE_STRIP);
+								{
+									GL11.glVertex3f(oldX, oldY, 0F);
+									GL11.glVertex3f(xIndex, yIndex, 0F);
+									oldX = xIndex;
+									oldY = yIndex;
+									xIndex++;
+								}
+								GL11.glEnd();
+							}
+							GL11.glColor3f(1F, 1F, 0F);
+							waveSize = tileEntityRadio.formBass.size();
+							oldX = -50F;
+							oldY = -200F;
+							xIndex = -50;
+							for(int i = 0; i < waveSize; i += increment){
+								if(tileEntityRadio.formBass.size() < i) break;
+								float scaledSample = tileEntityRadio.formBass.get(i);
+								float yIndex = scaledSample - 200F;
+								GL11.glBegin(GL11.GL_LINE_STRIP);
+								{
+									GL11.glVertex3f(oldX, oldY, 0F);
+									GL11.glVertex3f(xIndex, yIndex, 0F);
+									oldX = xIndex;
+									oldY = yIndex;
+									xIndex++;
+								}
+								GL11.glEnd();
+							}
+						}catch(Exception e){
+							System.err.println("Waveform error. This is normal, its due to a desync between the music thread, and the main thread!");
+						}
+					}
+					GL11.glPopMatrix();
+					GL11.glEnable(GL11.GL_TEXTURE_2D);
+					GL11.glColor3f(1F, 1F, 1F);
+				}
+
 	            GL11.glColor3f(1F, 1F, 1F);
 				int currentY = tileEntityRadio.wireSystemInfo.size() * -10 - 75;
 				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;

@@ -22,7 +22,6 @@ import com.codingforcookies.betterrecords.src.betterenums.IRecordAmplitude;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
 import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
-import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -295,8 +294,8 @@ public class SoundHandler {
 		float unscaledBass = -1F;
 		TileEntity tileEntity = Minecraft.getMinecraft().theWorld.getTileEntity(pos);
 		if(tileEntity != null && tileEntity instanceof IRecordWireHome) {
-			((TileEntityRecordPlayer)tileEntity).addTreble(getUnscaledWaveform(buffer, true, false));
-			((TileEntityRecordPlayer)tileEntity).addBass(getUnscaledWaveform(buffer, false, false));
+			((IRecordWireHome) tileEntity).addTreble(getUnscaledWaveform(buffer, true, false));
+			((IRecordWireHome) tileEntity).addBass(getUnscaledWaveform(buffer, false, false));
 			
 			for(RecordConnection con : ((IRecordWireHome)tileEntity).getConnections()) {
 				if(buffer == null)
