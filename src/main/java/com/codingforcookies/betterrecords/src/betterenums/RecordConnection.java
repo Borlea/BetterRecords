@@ -36,6 +36,8 @@ public class RecordConnection {
 	}
 
 	public boolean sameInitial(BlockPos pos) {
+		if(pos1 == null)
+			return false;
 		return pos1.equals(pos);
 	}
 

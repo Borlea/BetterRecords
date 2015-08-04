@@ -1,0 +1,34 @@
+{
+    "textures": {
+        "0": "betterrecords:blocks/lazercluster",
+		"particle": "betterrecords:blocks/breaktexture_2"
+    },
+    "elements": [
+        {
+            "name": "Base",
+            "from": [ 2.0, 0.0, 2.0 ], 
+            "to": [ 14.0, 3.0, 14.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 3.0, 3.0, 3.7 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 3.0, 3.0, 3.7 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 3.0, 3.0, 3.7 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 3.0, 3.0, 3.7 ] },
+                "up": { "texture": "#0", "uv": [ 3.0, 0.0, 6.0, 3.0 ] },
+                "down": { "texture": "#0", "uv": [ 3.0, 0.0, 6.0, 3.0 ] }
+            }
+        },
+        {
+            "name": "Emitor",
+            "from": [ 5.0, 3.0, 5.0 ], 
+            "to": [ 11.0, 11.0, 11.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 7.0, 4.0, 9.0 ] },
+                "east": { "texture": "#0", "uv": [ 0.0, 7.0, 4.0, 9.0 ] },
+                "south": { "texture": "#0", "uv": [ 0.0, 7.0, 4.0, 9.0 ] },
+                "west": { "texture": "#0", "uv": [ 0.0, 7.0, 4.0, 9.0 ] },
+                "up": { "texture": "#0", "uv": [ 0.0, 7.0, 4.0, 9.0 ] },
+                "down": { "texture": "#0", "uv": [ 0.0, 7.0, 4.0, 9.0 ] }
+            }
+        }
+    ]
+}

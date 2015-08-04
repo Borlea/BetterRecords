@@ -2,11 +2,13 @@ package com.codingforcookies.betterrecords.src.client.models;
 
 import org.lwjgl.opengl.GL11;
 
+import com.codingforcookies.betterrecords.src.StaticInfo;
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
 import com.codingforcookies.betterrecords.src.items.TileEntityLazerCluster;
 
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 
 public class BlockLazerClusterRenderer extends TileEntitySpecialRenderer {
@@ -20,10 +22,25 @@ public class BlockLazerClusterRenderer extends TileEntitySpecialRenderer {
 
 		GL11.glPushMatrix();
 		{
-			GL11.glTranslatef((float)x + 0.5F, (float)y + 0.5F, (float)z + 0.5F);
+			GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 			
-			// DRAW MODEL
+			GL11.glDisable(GL11.GL_LIGHTING);//Makes it all white ^_^
+			bindTexture(StaticInfo.modelLazerClusterRes);
+			if(tileEntityLazerCluster.r != 0.0F && tileEntityLazerCluster.g != 0.0F && tileEntityLazerCluster.b != 0.0F) {
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glColor4f(tileEntityLazerCluster.r, tileEntityLazerCluster.g, tileEntityLazerCluster.b, (ClientProxy.flashyMode == 1 ? .2F : .4F));
+			}
+			StaticInfo.modelLazerCluster.render((Entity)null, 0F, 0F, 0F, 0.0F, 0.0F, 0.0625F);
+			if(tileEntityLazerCluster.r != 0.0F && tileEntityLazerCluster.g != 0.0F && tileEntityLazerCluster.b != 0.0F) {
+				GL11.glDisable(GL11.GL_BLEND);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
+			}
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			
+			GL11.glTranslatef(0.0F, 1.0F, 0.0F);
 			
 			if(tileEntityLazerCluster.bass != 0 && ClientProxy.flashyMode > 0) {
 				GL11.glPushMatrix();

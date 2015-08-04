@@ -1,7 +1,7 @@
 {
     "textures": {
         "0": "betterrecords:blocks/strobelight",
-		"particle": "betterrecords:blocks/breaktexture"
+		"particle": "betterrecords:blocks/breaktexture_2"
     },
     "elements": [
         {

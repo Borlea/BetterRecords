@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.codingforcookies.betterrecords.src.items.ItemURLRecord;
 
-import net.minecraft.block.BlockColored;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
@@ -78,7 +77,7 @@ public class RecipeColoredRecord implements IRecipe {
 					if(itemstack1.getItem() != Items.dye)
 						return null;
 
-					float[] afloat = EntitySheep.func_175513_a(EnumDyeColor.values()[itemstack1.getItemDamage()]);
+					float[] afloat = EntitySheep.func_175513_a(EnumDyeColor.byDyeDamage(itemstack1.getMetadata()));
 					int j1 = (int)(afloat[0] * 255.0F);
 					int k1 = (int)(afloat[1] * 255.0F);
 					l1 = (int)(afloat[2] * 255.0F);

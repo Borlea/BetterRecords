@@ -22,6 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockLazerCluster extends BlockContainer {
 	public BlockLazerCluster() {
 		super(Material.iron);
+		setBlockBounds(0.1F, 0F, 0.1F, 0.9F, 0.85F, 0.9F);
 	}
 	
 	public int getLightValue(IBlockAccess world, BlockPos pos) {

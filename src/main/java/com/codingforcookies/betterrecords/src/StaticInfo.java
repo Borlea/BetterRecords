@@ -3,6 +3,7 @@ package com.codingforcookies.betterrecords.src;
 import com.codingforcookies.betterrecords.src.client.models.ModelFrequencyTuner;
 import com.codingforcookies.betterrecords.src.client.models.ModelLGSpeaker;
 import com.codingforcookies.betterrecords.src.client.models.ModelLazer;
+import com.codingforcookies.betterrecords.src.client.models.ModelLazerCluster;
 import com.codingforcookies.betterrecords.src.client.models.ModelMDSpeaker;
 import com.codingforcookies.betterrecords.src.client.models.ModelRadio;
 import com.codingforcookies.betterrecords.src.client.models.ModelRecordEtcher;
@@ -36,4 +37,6 @@ public class StaticInfo {
 	public static ResourceLocation modelStrobeLightRes = new ResourceLocation(BetterRecords.ID, "textures/blocks/strobelight.png");
 	public static final ModelLazer modelLazer = new ModelLazer();
 	public static ResourceLocation modelLazerRes = new ResourceLocation(BetterRecords.ID, "textures/blocks/lazer.png");
+	public static final ModelLazerCluster modelLazerCluster = new ModelLazerCluster();
+	public static ResourceLocation modelLazerClusterRes = new ResourceLocation(BetterRecords.ID, "textures/blocks/lazercluster.png");
 }
