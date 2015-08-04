@@ -1,9 +1,5 @@
 package com.codingforcookies.betterrecords.src;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.codingforcookies.betterrecords.src.client.BetterCreativeTab;
@@ -32,21 +28,24 @@ import com.codingforcookies.betterrecords.src.items.TileEntityStrobeLight;
 import com.codingforcookies.betterrecords.src.packets.ChannelHandler;
 import com.codingforcookies.betterrecords.src.packets.PacketHandler;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-
-import static org.lwjgl.demo.util.IOUtil.*;
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = BetterRecords.ID, version = "@VERSION@", useMetadata = true, name = "Better Records",
 acceptableRemoteVersions = "@CHANGE_VERSION@", acceptedMinecraftVersions = "@MC_VERSION@", acceptableSaveVersions = "@CHANGE_VERSION@")
@@ -62,31 +61,36 @@ public class BetterRecords {
 	
 	public static final BetterCreativeTab recordsTab = new BetterCreativeTab();
 	
-	public static final ItemURLRecord itemURLRecord = (ItemURLRecord)new ItemURLRecord().setUnlocalizedName("urlrecord").setTextureName(ID + ":urlrecord").setCreativeTab(recordsTab);
-	public static final ItemURLMultiRecord itemURLMultiRecord = (ItemURLMultiRecord)new ItemURLMultiRecord().setUnlocalizedName("urlmultirecord").setTextureName(ID + ":urlmultirecord").setCreativeTab(recordsTab);
-	public static final ItemFreqCrystal itemFreqCrystal = (ItemFreqCrystal)new ItemFreqCrystal().setUnlocalizedName("freqcrystal").setTextureName(ID + ":freqcrystal").setCreativeTab(recordsTab);
+	public static final ItemURLRecord itemURLRecord = (ItemURLRecord)new ItemURLRecord().setUnlocalizedName("urlrecord").setCreativeTab(recordsTab);
+	public static final ItemURLMultiRecord itemURLMultiRecord = (ItemURLMultiRecord)new ItemURLMultiRecord().setUnlocalizedName("urlmultirecord").setCreativeTab(recordsTab);
+	public static final ItemFreqCrystal itemFreqCrystal = (ItemFreqCrystal)new ItemFreqCrystal().setUnlocalizedName("freqcrystal").setCreativeTab(recordsTab);
 	
 	
-	public static final ItemRecordWire itemRecordWire = (ItemRecordWire)new ItemRecordWire().setUnlocalizedName("recordwire").setTextureName(ID + ":recordwire").setCreativeTab(recordsTab);
-	public static final ItemRecordWireCutter itemRecordCutters = (ItemRecordWireCutter)new ItemRecordWireCutter().setUnlocalizedName("recordwirecutters").setTextureName(ID + ":recordwirecutters").setCreativeTab(recordsTab);
+	public static final ItemRecordWire itemRecordWire = (ItemRecordWire)new ItemRecordWire().setUnlocalizedName("recordwire").setCreativeTab(recordsTab);
+	public static final ItemRecordWireCutter itemRecordCutters = (ItemRecordWireCutter)new ItemRecordWireCutter().setUnlocalizedName("recordwirecutters").setCreativeTab(recordsTab);
 	
 	
-	public static final BlockRecordEtcher blockRecordEtcher = (BlockRecordEtcher)new BlockRecordEtcher().setBlockName("recordetcher").setBlockTextureName(ID + ":breaktexture").setHardness(1.5F).setResistance(5.5F).setCreativeTab(recordsTab);
-	public static final BlockRecordPlayer blockRecordPlayer = (BlockRecordPlayer)new BlockRecordPlayer().setBlockName("recordplayer").setBlockTextureName(ID + ":breaktexture").setHardness(1F).setResistance(5F).setCreativeTab(recordsTab);
-	public static final BlockFrequencyTuner blockFrequencyTuner = (BlockFrequencyTuner)new BlockFrequencyTuner().setBlockName("frequencytuner").setBlockTextureName(ID + ":breaktexture").setHardness(1.5F).setResistance(5.5F).setCreativeTab(recordsTab);
-	public static final BlockRadio blockRadio = (BlockRadio)new BlockRadio().setBlockName("shoutcastradio").setBlockTextureName(ID + ":breaktexture").setHardness(2F).setResistance(6.3F).setCreativeTab(recordsTab);
 	
-	public static final BlockRecordSpeaker blockSMSpeaker = (BlockRecordSpeaker)new BlockRecordSpeaker(0).setBlockName("recordspeaker.sm").setBlockTextureName(ID + ":breaktexture").setHardness(2F).setResistance(7.5F).setCreativeTab(recordsTab);
-	public static final BlockRecordSpeaker blockMDSpeaker = (BlockRecordSpeaker)new BlockRecordSpeaker(1).setBlockName("recordspeaker.md").setBlockTextureName(ID + ":breaktexture").setHardness(3F).setResistance(8F).setCreativeTab(recordsTab);
-	public static final BlockRecordSpeaker blockLGSpeaker = (BlockRecordSpeaker)new BlockRecordSpeaker(2).setBlockName("recordspeaker.lg").setBlockTextureName(ID + ":breaktexture").setHardness(4F).setResistance(9.5F).setCreativeTab(recordsTab);
+	public static final BlockRecordEtcher blockRecordEtcher = (BlockRecordEtcher)new BlockRecordEtcher().setUnlocalizedName("recordetcher").setHardness(1.5F).setResistance(5.5F).setCreativeTab(recordsTab);
+	public static final BlockRecordPlayer blockRecordPlayer = (BlockRecordPlayer)new BlockRecordPlayer().setUnlocalizedName("recordplayer").setHardness(1F).setResistance(5F).setCreativeTab(recordsTab);
+	public static final BlockFrequencyTuner blockFrequencyTuner = (BlockFrequencyTuner)new BlockFrequencyTuner().setUnlocalizedName("frequencytuner").setHardness(1.5F).setResistance(5.5F).setCreativeTab(recordsTab);
+	public static final BlockRadio blockRadio = (BlockRadio)new BlockRadio().setUnlocalizedName("shoutcastradio").setHardness(2F).setResistance(6.3F).setCreativeTab(recordsTab);
 	
-	public static final BlockStrobeLight blockStrobeLight = (BlockStrobeLight)new BlockStrobeLight().setBlockName("strobelight").setBlockTextureName(ID + ":breaktexture").setHardness(2.75F).setResistance(4F).setCreativeTab(recordsTab);
-	public static final BlockLazer blockLazer = (BlockLazer)new BlockLazer().setBlockName("lazer").setBlockTextureName(ID + ":breaktexture").setHardness(3.2F).setResistance(4.3F).setCreativeTab(recordsTab);
-	public static final BlockLazerCluster blockLazerCluster = (BlockLazerCluster)new BlockLazerCluster().setBlockName("lazercluster").setBlockTextureName(ID + ":breaktexture").setHardness(4.8F).setResistance(4.8F).setCreativeTab(recordsTab);
+	public static final BlockRecordSpeaker blockSMSpeaker = (BlockRecordSpeaker)new BlockRecordSpeaker(0).setUnlocalizedName("recordspeaker.sm").setHardness(2F).setResistance(7.5F).setCreativeTab(recordsTab);
+	public static final BlockRecordSpeaker blockMDSpeaker = (BlockRecordSpeaker)new BlockRecordSpeaker(1).setUnlocalizedName("recordspeaker.md").setHardness(3F).setResistance(8F).setCreativeTab(recordsTab);
+	public static final BlockRecordSpeaker blockLGSpeaker = (BlockRecordSpeaker)new BlockRecordSpeaker(2).setUnlocalizedName("recordspeaker.lg").setHardness(4F).setResistance(9.5F).setCreativeTab(recordsTab);
 	
+	public static final BlockStrobeLight blockStrobeLight = (BlockStrobeLight)new BlockStrobeLight().setUnlocalizedName("strobelight").setHardness(2.75F).setResistance(4F).setCreativeTab(recordsTab);
+	public static final BlockLazer blockLazer = (BlockLazer)new BlockLazer().setUnlocalizedName("lazer").setHardness(3.2F).setResistance(4.3F).setCreativeTab(recordsTab);
+	public static final BlockLazerCluster blockLazerCluster = (BlockLazerCluster)new BlockLazerCluster().setUnlocalizedName("lazercluster").setHardness(4.8F).setResistance(4.8F).setCreativeTab(recordsTab);
+	
+	//Add comparator support for blocks
+	//Add hopper support for blocks
+	//Frequency Tuner gui instantly closes
+	//Fix frequency tuner inventory model(Textures need to be readded)
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		glfwSetDropCallback(window, new GLFWDropCallback() {
+		/*glfwSetDropCallback(window, new GLFWDropCallback() {
 			@Override
 			public void invoke(long window, int count, long names) {
 				printEvent("drop %d file%s", window, count, count == 1 ? "" : "s");
@@ -98,7 +102,7 @@ public class BetterRecords {
 					}
 				});
 			}
-		});
+		});*/
 		
 		proxy.preInit();
 	}
@@ -106,24 +110,37 @@ public class BetterRecords {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		PacketHandler.channels = NetworkRegistry.INSTANCE.newChannel("BetterRecords", new ChannelHandler());
-
 		GameRegistry.registerItem(itemURLRecord, "urlrecord");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemURLRecord, 0, new ModelResourceLocation(ID + ":urlrecord", "inventory"));
 		GameRegistry.registerItem(itemURLMultiRecord, "urlmultirecord");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemURLMultiRecord, 0, new ModelResourceLocation(ID + ":urlmultirecord", "inventory"));
 		GameRegistry.registerItem(itemFreqCrystal, "freqcrystal");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemFreqCrystal, 0, new ModelResourceLocation(ID + ":freqcrystal", "inventory"));
 		GameRegistry.registerItem(itemRecordWire, "recordwire");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemRecordWire, 0, new ModelResourceLocation(ID + ":recordwire", "inventory"));
 		GameRegistry.registerItem(itemRecordCutters, "recordwirecutters");
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemRecordCutters, 0, new ModelResourceLocation(ID + ":recordwirecutters", "inventory"));
 		
 		GameRegistry.registerBlock(blockRecordEtcher, "recordetcher");
+		registerRender(blockRecordEtcher);
 		GameRegistry.registerBlock(blockRecordPlayer, "recordplayer");
+		registerRender(blockRecordPlayer);
 		GameRegistry.registerBlock(blockFrequencyTuner, "frequencytuner");
+		registerRender(blockFrequencyTuner);
 		GameRegistry.registerBlock(blockRadio, "shoutcastradio");
+		registerRender(blockRadio);
 		GameRegistry.registerBlock(blockSMSpeaker, "recordspeaker.sm");
+		registerRender(blockSMSpeaker);
 		GameRegistry.registerBlock(blockMDSpeaker, "recordspeaker.md");
+		registerRender(blockMDSpeaker);
 		GameRegistry.registerBlock(blockLGSpeaker, "recordspeaker.lg");
+		registerRender(blockLGSpeaker);
 		GameRegistry.registerBlock(blockStrobeLight, "strobelight");
+		registerRender(blockStrobeLight);
 		GameRegistry.registerBlock(blockLazer, "lazer");
+		registerRender(blockLazer);
 		GameRegistry.registerBlock(blockLazerCluster, "lazercluster");
-		
+		registerRender(blockLazerCluster);
 		
 		GameRegistry.registerTileEntity(TileEntityRecordEtcher.class, "recordetcher");
 		GameRegistry.registerTileEntity(TileEntityRecordPlayer.class, "recordplayer");
@@ -171,5 +188,9 @@ public class BetterRecords {
 
 	public static String[] getWordWrappedString(int maxWidth, String string) {
 		return WordUtils.wrap(string, maxWidth, "\n", false).replace("\\n", "\n").split("\n");
+	}
+	
+	public static void registerRender(Block block){
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(ID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
 	}
 }

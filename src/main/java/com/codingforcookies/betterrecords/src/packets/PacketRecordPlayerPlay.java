@@ -1,21 +1,22 @@
 package com.codingforcookies.betterrecords.src.packets;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 
 import com.codingforcookies.betterrecords.src.client.sound.Sound;
 import com.codingforcookies.betterrecords.src.client.sound.SoundHandler;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+
 
 public class PacketRecordPlayerPlay implements IPacket {
-	int x, y, z, dimension;
+	BlockPos pos;
+	int dimension;
 	float playRadius;
 	boolean repeat;
 	
@@ -23,10 +24,8 @@ public class PacketRecordPlayerPlay implements IPacket {
 	
 	public PacketRecordPlayerPlay() { }
 	
-	public PacketRecordPlayerPlay(int x, int y, int z, float playRadius, int dimension, String name, String url, String local, boolean repeat) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public PacketRecordPlayerPlay(BlockPos pos, float playRadius, int dimension, String name, String url, String local, boolean repeat) {
+		this.pos = pos;
 		this.playRadius = playRadius;
 		this.dimension = dimension;
 		this.repeat = repeat;
@@ -35,10 +34,8 @@ public class PacketRecordPlayerPlay implements IPacket {
 		sounds.add(new Sound().setInfo(name, url, local));
 	}
 	
-	public PacketRecordPlayerPlay(int x, int y, int z, float playRadius, int dimension, NBTTagCompound nbt, boolean repeat) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public PacketRecordPlayerPlay(BlockPos pos, float playRadius, int dimension, NBTTagCompound nbt, boolean repeat) {
+		this.pos = pos;
 		this.playRadius = playRadius;
 		this.dimension = dimension;
 		this.repeat = repeat;
@@ -52,9 +49,7 @@ public class PacketRecordPlayerPlay implements IPacket {
 	public void readBytes(ByteBuf bytes) {
 		String recieved = ByteBufUtils.readUTF8String(bytes);
 		String[] str = recieved.split("\2477");
-		x = Integer.parseInt(str[0]);
-		y = Integer.parseInt(str[1]);
-		z = Integer.parseInt(str[2]);
+		pos = new BlockPos(Integer.parseInt(str[0]), Integer.parseInt(str[1]), Integer.parseInt(str[2]));
 		playRadius = Float.parseFloat(str[3]);
 		dimension = Integer.parseInt(str[4]);
 		repeat = Boolean.parseBoolean(str[5]);
@@ -62,9 +57,7 @@ public class PacketRecordPlayerPlay implements IPacket {
 		sounds = new ArrayList<Sound>();
 		for(String strr : str[6].split("\2478")) {
 			Sound snd = Sound.fromString(strr);
-			snd.x = x;
-			snd.y = y;
-			snd.z = z;
+			snd.pos = pos;
 			snd.dimension = dimension;
 			snd.playRadius = playRadius;
 			sounds.add(snd);
@@ -76,12 +69,12 @@ public class PacketRecordPlayerPlay implements IPacket {
 		if(sounds != null)
 			for(Sound snd : sounds)
 				sndStr += snd.toString() + "\2478";
-		ByteBufUtils.writeUTF8String(bytes, x + "\2477" + y + "\2477" + z + "\2477" + playRadius + "\2477" + dimension + "\2477" + repeat + "\2477" + sndStr.substring(0, sndStr.length() - 2));
+		ByteBufUtils.writeUTF8String(bytes, pos.getX() + "\2477" + pos.getY() + "\2477" + pos.getZ() + "\2477" + playRadius + "\2477" + dimension + "\2477" + repeat + "\2477" + sndStr.substring(0, sndStr.length() - 2));
 	}
 	
 	public void executeClient(EntityPlayer player) {
-		if(playRadius > 100000 || (float)Math.abs(Math.sqrt(Math.pow(player.posX - x, 2) + Math.pow(player.posY - y, 2) + Math.pow(player.posZ - z, 2))) < playRadius) {
-			SoundHandler.playSound(x, y, z, dimension, playRadius, sounds, repeat);
+		if(playRadius > 100000 || (float)Math.abs(Math.sqrt(Math.pow(player.posX - pos.getX(), 2) + Math.pow(player.posY - pos.getY(), 2) + Math.pow(player.posZ - pos.getZ(), 2))) < playRadius) {
+			SoundHandler.playSound(pos, dimension, playRadius, sounds, repeat);
 		}
 	}
 	

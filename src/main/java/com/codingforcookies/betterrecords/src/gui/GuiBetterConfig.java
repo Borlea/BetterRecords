@@ -1,15 +1,16 @@
 package com.codingforcookies.betterrecords.src.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 
 import com.codingforcookies.betterrecords.src.BetterRecords;
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
 import com.codingforcookies.betterrecords.src.client.sound.SoundHandler;
 import com.codingforcookies.betterrecords.src.gui.Control.ControlType;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 public class GuiBetterConfig extends GuiScreen {
 	public ControlHandler controlHandler;
@@ -100,7 +101,7 @@ public class GuiBetterConfig extends GuiScreen {
 		}));
 	}
 	
-	protected void mouseClicked(int par1, int par2, int par3) {
+	protected void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		
 		controlHandler.mousepressed(par3, par1, par2);

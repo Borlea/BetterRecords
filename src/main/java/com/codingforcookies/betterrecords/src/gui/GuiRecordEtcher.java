@@ -16,13 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.StatCollector;
-
 import org.apache.commons.io.FilenameUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -34,6 +27,13 @@ import com.codingforcookies.betterrecords.src.packets.PacketHandler;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.StatCollector;
 
 public class GuiRecordEtcher extends GuiContainer {
 	TileEntityRecordEtcher tileEntity;
@@ -60,9 +60,8 @@ public class GuiRecordEtcher extends GuiContainer {
 	
 	public void initGui() {
 		super.initGui();
-		
-		nameField = new GuiTextField(this.fontRendererObj, 44, 20, 124, 10);
-		urlField = new GuiTextField(this.fontRendererObj, 44, 35, 124, 10);
+		nameField = new GuiTextField(0, this.fontRendererObj, 44, 20, 124, 10);
+		urlField = new GuiTextField(1, this.fontRendererObj, 44, 35, 124, 10);
 		urlField.setMaxStringLength(256);
 		
 		if(ClientProxy.defaultLibrary.size() == 0 || (ClientProxy.lastCheckType == 0 || ClientProxy.lastCheckType != (Minecraft.getMinecraft().theWorld.isRemote ? 1 : 2))) {
@@ -152,7 +151,7 @@ public class GuiRecordEtcher extends GuiContainer {
 		}
 	}
 	
-	protected void keyTyped(char par1, int par2) {
+	protected void keyTyped(char par1, int par2) throws IOException {
 		checkedURL = false;
 		checkURLTime = System.currentTimeMillis() + 2000;
 		
@@ -164,7 +163,7 @@ public class GuiRecordEtcher extends GuiContainer {
 			super.keyTyped(par1, par2);
 	}
 	
-	protected void mouseClicked(int par1, int par2, int par3) {
+	protected void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		int x = par1 - (width - xSize) / 2;
 		int y = par2 - (height - ySize) / 2;
@@ -176,7 +175,7 @@ public class GuiRecordEtcher extends GuiContainer {
 			if(selectedLib != -1) {
 				LibrarySong sel = ClientProxy.defaultLibrary.get(selectedLib);
 				try {
-					PacketHandler.sendURLWriteFromClient(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, sel.name, sel.url, sel.local, new URL(sel.url).openConnection().getContentLength() / 1024 / 1024, sel.color, sel.author);
+					PacketHandler.sendURLWriteFromClient(tileEntity.getPos(), sel.name, sel.url, sel.local, new URL(sel.url).openConnection().getContentLength() / 1024 / 1024, sel.color, sel.author);
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -200,7 +199,7 @@ public class GuiRecordEtcher extends GuiContainer {
 					
 					if(!exists) {
 						JsonObject elmnt = new JsonObject();
-						elmnt.addProperty("author", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
+						elmnt.addProperty("author", Minecraft.getMinecraft().thePlayer.getCommandSenderEntity().getName());
 						elmnt.addProperty("name", superName);
 						elmnt.addProperty("url", urlField.getText());
 						elmnt.addProperty("color", "#FFFFFF");
@@ -209,7 +208,7 @@ public class GuiRecordEtcher extends GuiContainer {
 						if(rootObj != null) {
 							rootObj.add(superLocal, elmnt);
 							
-							ClientProxy.defaultLibrary.add(0, new LibrarySong(superLocal, Minecraft.getMinecraft().thePlayer.getCommandSenderName(), superName, urlField.getText(), Integer.parseInt("FFFFFF", 16)));
+							ClientProxy.defaultLibrary.add(0, new LibrarySong(superLocal, Minecraft.getMinecraft().thePlayer.getCommandSenderEntity().getName(), superName, urlField.getText(), Integer.parseInt("FFFFFF", 16)));
 							
 							if(!ClientProxy.localLibrary.exists()) {
 								if(ClientProxy.localLibrary.getParentFile().mkdirs())
@@ -237,7 +236,7 @@ public class GuiRecordEtcher extends GuiContainer {
 					}
 				}
 				
-				PacketHandler.sendURLWriteFromClient(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, superName, urlField.getText(), superLocal, etchSize);
+				PacketHandler.sendURLWriteFromClient(tileEntity.getPos(), superName, urlField.getText(), superLocal, etchSize);
 			}
 		}
 		
@@ -290,7 +289,7 @@ public class GuiRecordEtcher extends GuiContainer {
 		
 		if(tileEntity.record == null)
 			error = "No record to etch";
-		else if(tileEntity.record.hasTagCompound() && tileEntity.record.stackTagCompound.hasKey("url"))
+		else if(tileEntity.record.hasTagCompound() && tileEntity.record.getTagCompound().hasKey("url"))
 			error = "Not a blank record";
 		else if(selectedLib != -1)
 			error = "Ready to etch!";

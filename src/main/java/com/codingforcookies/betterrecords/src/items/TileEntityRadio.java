@@ -3,23 +3,23 @@ package com.codingforcookies.betterrecords.src.items;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
+import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
+import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
+import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
-import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
-import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
-import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordWireHome {
+public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordWireHome, IUpdatePlayerListBox {
 	public ArrayList<Float> formTreble = new ArrayList<Float>();
 	public synchronized void addTreble(float form) { formTreble.add(form); }
 	public ArrayList<Float> formBass = new ArrayList<Float>();
@@ -80,14 +80,8 @@ public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordW
 		crystal.stackSize = 1;
 	}
 	
-	@SideOnly(Side.SERVER)
-	public boolean canUpdate() {
-		return false;
-	}
-	
 	@SideOnly(Side.CLIENT)
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 		
 		if(opening) {
 			if(openAmount < 0.268F)
@@ -116,8 +110,6 @@ public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordW
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		
-		if(compound.hasKey("rotation"))
-			blockMetadata = compound.getInteger("rotation");
 		if(compound.hasKey("crystal"))
 			setCrystal(ItemStack.loadItemStackFromNBT(compound.getCompoundTag("crystal")));
 		if(compound.hasKey("opening"))
@@ -133,7 +125,6 @@ public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordW
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		
-		compound.setFloat("rotation", blockMetadata);
 		compound.setTag("crystal", getStackTagCompound(crystal));
 		compound.setBoolean("opening", opening);
 		compound.setString("connections", ConnectionHelper.serializeConnections(connections));
@@ -151,11 +142,11 @@ public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordW
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+        return new S35PacketUpdateTileEntity(getPos(), 1, nbt);
 	}
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)  { 
-		readFromNBT(pkt.func_148857_g());
-		Minecraft.getMinecraft().renderGlobal.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+		readFromNBT(pkt.getNbtCompound());
+		Minecraft.getMinecraft().renderGlobal.markBlockForUpdate(getPos());
 	}
 }

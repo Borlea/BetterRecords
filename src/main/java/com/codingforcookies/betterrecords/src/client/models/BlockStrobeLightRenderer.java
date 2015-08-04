@@ -1,11 +1,5 @@
 package com.codingforcookies.betterrecords.src.client.models;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.opengl.GL11;
 
 import com.codingforcookies.betterrecords.src.StaticInfo;
@@ -13,10 +7,16 @@ import com.codingforcookies.betterrecords.src.client.BetterEventHandler;
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
 import com.codingforcookies.betterrecords.src.items.TileEntityStrobeLight;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+
 public class BlockStrobeLightRenderer extends TileEntitySpecialRenderer {
 	public BlockStrobeLightRenderer() { }
 
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale, int unknown) {
 		if(!(te instanceof TileEntityStrobeLight))
 			return;
 
@@ -37,8 +37,8 @@ public class BlockStrobeLightRenderer extends TileEntitySpecialRenderer {
 				
 				GL11.glPushMatrix();
 				{
-		            GL11.glRotatef(RenderManager.instance.playerViewY - 180F, 0F, 1F, 0F);
-		            GL11.glRotatef(RenderManager.instance.playerViewX, 1F, 0F, 0F);
+		            GL11.glRotatef(Minecraft.getMinecraft().getRenderManager().playerViewY - 180F, 0F, 1F, 0F);
+		            GL11.glRotatef(Minecraft.getMinecraft().getRenderManager().playerViewX, 1F, 0F, 0F);
 
 					GL11.glDisable(GL11.GL_DEPTH_TEST);
 					GL11.glDisable(GL11.GL_LIGHTING);
@@ -77,7 +77,7 @@ public class BlockStrobeLightRenderer extends TileEntitySpecialRenderer {
 				
 				if(ClientProxy.flashyMode > 1) {
 					Minecraft mc = Minecraft.getMinecraft();
-					float dist = (float)Math.sqrt(Math.pow(tileEntityStrobeLight.xCoord - mc.thePlayer.posX, 2) + Math.pow(tileEntityStrobeLight.yCoord - mc.thePlayer.posY, 2) + Math.pow(tileEntityStrobeLight.zCoord - mc.thePlayer.posZ, 2));
+					float dist = (float)Math.sqrt(Math.pow(tileEntityStrobeLight.getPos().getX() - mc.thePlayer.posX, 2) + Math.pow(tileEntityStrobeLight.getPos().getY() - mc.thePlayer.posY, 2) + Math.pow(tileEntityStrobeLight.getPos().getZ() - mc.thePlayer.posZ, 2));
 					if(dist < 4 * tileEntityStrobeLight.bass) {
 						float newStrobe = Math.abs(dist - 4F * tileEntityStrobeLight.bass) / 100F;
 						if(newStrobe > 0F && BetterEventHandler.strobeLinger < newStrobe)

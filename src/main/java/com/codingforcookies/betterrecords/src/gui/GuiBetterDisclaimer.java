@@ -1,18 +1,19 @@
 package com.codingforcookies.betterrecords.src.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.opengl.GL11;
 
 import com.codingforcookies.betterrecords.src.BetterRecords;
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+
 public class GuiBetterDisclaimer extends GuiScreen {
-	protected void mouseClicked(int par1, int par2, int par3) {
+	protected void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 
 		int x = width / 2 - 100;

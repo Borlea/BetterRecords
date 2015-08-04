@@ -1,20 +1,22 @@
 package com.codingforcookies.betterrecords.src.client.models;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.opengl.GL11;
 
 import com.codingforcookies.betterrecords.src.StaticInfo;
 import com.codingforcookies.betterrecords.src.items.TileEntityRecordEtcher;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+
 public class BlockRecordEtcherRenderer extends TileEntitySpecialRenderer {
 	public BlockRecordEtcherRenderer() { }
 	
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale, int unknown) {
 		if(!(te instanceof TileEntityRecordEtcher))
 			return;
 		
@@ -27,12 +29,12 @@ public class BlockRecordEtcherRenderer extends TileEntitySpecialRenderer {
 				GL11.glScalef(2F, 2F, 2F);
 				GL11.glRotatef(90F, 1F, 0F, 0F);
 				GL11.glRotatef(tileEntityRecordEtcher.recordRotation * 57.3F, 0F, 0F, 1F);
-				GL11.glTranslatef(0F, -.225F, 0F);
+				GL11.glTranslatef(0F, -.35F, 0F);
 				if(Minecraft.getMinecraft().gameSettings.fancyGraphics)
-					RenderManager.instance.renderEntityWithPosYaw(tileEntityRecordEtcher.recordEntity, 0, 0, 0, 0, 0);
+					Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(tileEntityRecordEtcher.recordEntity, 0, 0, 0, 0, 0);
 				else{
 					Minecraft.getMinecraft().gameSettings.fancyGraphics = true;
-					RenderManager.instance.renderEntityWithPosYaw(tileEntityRecordEtcher.recordEntity, 0, 0, 0, 0, 0);
+					Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(tileEntityRecordEtcher.recordEntity, 0, 0, 0, 0, 0);
 					Minecraft.getMinecraft().gameSettings.fancyGraphics = false;
 				}
 			}

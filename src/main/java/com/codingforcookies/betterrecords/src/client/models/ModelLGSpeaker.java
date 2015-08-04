@@ -10,7 +10,7 @@ public class ModelLGSpeaker extends ModelBase {
 
 	public ModelLGSpeaker() {
 		textureWidth = 128;
-		textureHeight = 64;
+		textureHeight = 128;
 
 		wool = new ModelRenderer(this, 48, 0);
 		wool.addBox(-5F, -9F, -6.5F, 10, 22, 1);

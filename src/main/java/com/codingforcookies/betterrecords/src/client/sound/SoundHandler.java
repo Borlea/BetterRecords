@@ -17,9 +17,6 @@ import javax.sound.sampled.DataLine.Info;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-
 import com.codingforcookies.betterrecords.src.ClasspathInjector;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordAmplitude;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
@@ -27,8 +24,11 @@ import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
 import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModClassLoader;
+import net.minecraft.client.Minecraft;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModClassLoader;
 
 public class SoundHandler {
 	public static File soundLocation;
@@ -91,8 +91,8 @@ public class SoundHandler {
 		}
 	}
 	
-	public static void playSound(final int x, final int y, final int z, final int dimension, final float playRadius, final List<Sound> sounds, boolean repeat) {
-		playSound(x, y, z, dimension, playRadius, sounds, repeat, 0);
+	public static void playSound(final BlockPos pos, final int dimension, final float playRadius, final List<Sound> sounds, boolean repeat) {
+		playSound(pos, dimension, playRadius, sounds, repeat, 0);
 	}
 	
 	private static void obtainSound(final SoundManager manager, final int songIndex) {
@@ -109,21 +109,21 @@ public class SoundHandler {
 	
 	protected static void playSound(SoundManager manager, int songIndex) {
 		if(songIndex == -1)
-			playSound(manager.songs.get(0).x, manager.songs.get(0).y, manager.songs.get(0).z, manager.songs.get(0).dimension, manager.songs.get(0).playRadius, manager.songs, manager.repeat, -1);
+			playSound(manager.songs.get(0).pos, manager.songs.get(0).dimension, manager.songs.get(0).playRadius, manager.songs, manager.repeat, -1);
 		else
-			playSound(manager.songs.get(songIndex).x, manager.songs.get(songIndex).y, manager.songs.get(songIndex).z, manager.songs.get(songIndex).dimension, manager.songs.get(songIndex).playRadius, manager.songs, manager.repeat, songIndex);
+			playSound(manager.songs.get(songIndex).pos, manager.songs.get(songIndex).dimension, manager.songs.get(songIndex).playRadius, manager.songs, manager.repeat, songIndex);
 	}
 	
-	private static void playSound(final int x, final int y, final int z, final int dimension, final float playRadius, final List<Sound> sounds, boolean repeat, int songIndex) {
+	private static void playSound(final BlockPos pos, final int dimension, final float playRadius, final List<Sound> sounds, boolean repeat, int songIndex) {
 		if(songIndex >= 0) {
 			SoundManager sndMgr = null;
 			
-			if(soundPlaying.get(x + "," + y + "," + z + "," + dimension) == null) {
+			if(soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension) == null) {
 				sndMgr = new SoundManager(repeat);
 				sndMgr.songs = sounds;
-				soundPlaying.put(x + "," + y + "," + z + "," + dimension, sndMgr);
+				soundPlaying.put(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension, sndMgr);
 			}else
-				sndMgr = soundPlaying.get(x + "," + y + "," + z + "," + dimension);
+				sndMgr = soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension);
 			
 			for(int i = songIndex; i < sounds.size(); i++) {
 				if(!soundList.containsKey(sounds.get(i).name)) {
@@ -151,7 +151,7 @@ public class SoundHandler {
 						
 						i--;
 					}else if(i == 0) {
-						tryToStart(x, y, z, dimension);
+						tryToStart(pos, dimension);
 						if(sounds.size() == 1)
 							return;
 					}
@@ -159,44 +159,44 @@ public class SoundHandler {
 			}
 		}
 		
-		tryToStart(x, y, z, dimension);
+		tryToStart(pos, dimension);
 	}
 	
-	private static void tryToStart(final int x, final int y, final int z, final int dimension) {
-		if(soundPlaying.get(x + "," + y + "," + z + "," + dimension) != null && soundPlaying.get(x + "," + y + "," + z + "," + dimension).current == -1)
+	private static void tryToStart(final BlockPos pos, final int dimension) {
+		if(soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension) != null && soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension).current == -1)
 			new Thread(new Runnable() {
 				public void run() {
 					Sound snd = null;
-					if(soundPlaying.get(x + "," + y + "," + z + "," + dimension).current != -1)
+					if(soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension).current != -1)
 						return;
-					while(soundPlaying.get(x + "," + y + "," + z + "," + dimension) != null && (snd = soundPlaying.get(x + "," + y + "," + z + "," + dimension).nextSong()) != null) {
+					while(soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension) != null && (snd = soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension).nextSong()) != null) {
 						nowPlaying = snd.local;
 						nowPlayingEnd = System.currentTimeMillis() + 5000;
-						playSourceDataLine(snd, x, y, z, dimension, BetterSoundType.SONG, new File(soundLocation, snd.name));
+						playSourceDataLine(snd, pos, dimension, BetterSoundType.SONG, new File(soundLocation, snd.name));
 					}
 					
-					soundPlaying.remove(x + "," + y + "," + z + "," + dimension);
+					soundPlaying.remove(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension);
 				}
 			}).start();
 	}
 	
-	public static void playSoundFromStream(final int x, final int y, final int z, final int dimension, final float playRadius, final String localName, final String url) {
+	public static void playSoundFromStream(final BlockPos pos, final int dimension, final float playRadius, final String localName, final String url) {
 		if(!streamRadio)
 			return;
 		
-		soundPlaying.put(x + "," + y + "," + z + "," + dimension, new SoundManager(new Sound(x, y, z, dimension, playRadius).setInfo("", url, localName), false));
+		soundPlaying.put(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension, new SoundManager(new Sound(pos, dimension, playRadius).setInfo("", url, localName), false));
 		
 		new Thread(new Runnable() {
 			public void run() {
 				try {
 					System.out.println("Connection to stream " + localName + "...");
-					Sound snd = soundPlaying.get(x + "," + y + "," + z + "," + dimension).nextSong();
+					Sound snd = soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension).nextSong();
 					
 					IcyURLConnection urlConn = new IcyURLConnection(new URL(url.startsWith("http") ? url : "http://" + url));
 					urlConn.setInstanceFollowRedirects(true);
 					urlConn.connect();
 
-					playSourceDataLine(snd, x, y, z, dimension, BetterSoundType.RADIO, new BufferedInputStream(urlConn.getInputStream()));
+					playSourceDataLine(snd, pos, dimension, BetterSoundType.RADIO, new BufferedInputStream(urlConn.getInputStream()));
 				} catch (Exception e) {
 					e.printStackTrace();
 					System.err.println("Failed to stream: " + url);
@@ -204,12 +204,12 @@ public class SoundHandler {
 					nowPlayingEnd = System.currentTimeMillis() + 5000;
 				}
 				
-				soundPlaying.remove(x + "," + y + "," + z + "," + dimension);
+				soundPlaying.remove(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension);
 			}
 		}).start();
 	}
 	
-	private static void playSourceDataLine(Sound snd, int x, int y, int z, int dimension, BetterSoundType type, Object object) {
+	private static void playSourceDataLine(Sound snd, BlockPos pos, int dimension, BetterSoundType type, Object object) {
 		try {
 			final AudioInputStream in;
 			if(object instanceof File)
@@ -230,11 +230,12 @@ public class SoundHandler {
 				if(line != null) {
 					line.open(outFormat);
 
-					if(snd.volume == null)
+					if(snd.volume == null){
 						snd.volume = (FloatControl)line.getControl(FloatControl.Type.MASTER_GAIN);
-
+						snd.volume.setValue(-20F);
+					}
 					line.start();
-					stream(getAudioInputStream(outFormat, in), line, x, y, z, dimension, type);
+					stream(getAudioInputStream(outFormat, in), line, pos, dimension, type);
 					line.drain();
 					line.stop();
 				}
@@ -265,7 +266,7 @@ public class SoundHandler {
 		return new AudioFormat(PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
 	}
 	
-	private static void stream(AudioInputStream in, SourceDataLine line, int x, int y, int z, int dimension, BetterSoundType soundType) throws IOException {
+	private static void stream(AudioInputStream in, SourceDataLine line, BlockPos pos, int dimension, BetterSoundType soundType) throws IOException {
 		final byte[] buffer = new byte[streamBuffer];
 		for(int n = 0; n != -1; n = in.read(buffer, 0, buffer.length)) {
 			while(Minecraft.getMinecraft().isSingleplayer() && Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen.doesGuiPauseGame()) {
@@ -276,23 +277,23 @@ public class SoundHandler {
 				}
 			}
 			
-			if(soundPlaying.get(x + "," + y + "," + z + "," + dimension) == null || (soundType == BetterSoundType.RADIO && !streamRadio))
+			if(soundPlaying.get(pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + dimension) == null || (soundType == BetterSoundType.RADIO && !streamRadio))
 				return;
 			
-			updateAmplitude(buffer, x, y, z, dimension);
+			updateAmplitude(buffer, pos, dimension);
 			
 			line.write(buffer, 0, n);
 		}
 		
-		updateAmplitude(null, x, y, z, dimension);
+		updateAmplitude(null, pos, dimension);
 	}
 	
-	private static void updateAmplitude(byte[] buffer, int x, int y, int z, int dimension) {
-		if(Minecraft.getMinecraft().theWorld.provider.dimensionId != dimension)
+	private static void updateAmplitude(byte[] buffer, BlockPos pos, int dimension) {
+		if(Minecraft.getMinecraft().theWorld.provider.getDimensionId() != dimension)
 			return;
 		float unscaledTreble = -1F;
 		float unscaledBass = -1F;
-		TileEntity tileEntity = Minecraft.getMinecraft().theWorld.getTileEntity(x, y, z);
+		TileEntity tileEntity = Minecraft.getMinecraft().theWorld.getTileEntity(pos);
 		if(tileEntity != null && tileEntity instanceof IRecordWireHome) {
 			((TileEntityRecordPlayer)tileEntity).addTreble(getUnscaledWaveform(buffer, true, false));
 			((TileEntityRecordPlayer)tileEntity).addBass(getUnscaledWaveform(buffer, false, false));
@@ -300,7 +301,7 @@ public class SoundHandler {
 			for(RecordConnection con : ((IRecordWireHome)tileEntity).getConnections()) {
 				if(buffer == null)
 					return;
-				TileEntity tileEntityCon = Minecraft.getMinecraft().theWorld.getTileEntity(con.x2, con.y2, con.z2);
+				TileEntity tileEntityCon = Minecraft.getMinecraft().theWorld.getTileEntity(con.pos2);
 				if(tileEntityCon != null && tileEntityCon instanceof IRecordAmplitude) {
 					if(unscaledTreble == -1F || unscaledBass == 11F) {
 						unscaledTreble = getUnscaledWaveform(buffer, true, true);
@@ -314,27 +315,30 @@ public class SoundHandler {
 	}
 
 	public static float getUnscaledWaveform(byte[] eightBitByteArray, boolean high, boolean control) {
-		int[] toReturn = new int[eightBitByteArray.length / 2];
-		float avg = 0;
-		int index = 0;
-		
-		for(int audioByte = high ? 1 : 0; audioByte < eightBitByteArray.length; audioByte += 2) {
-			toReturn[index] = (int)eightBitByteArray[audioByte];
-			avg += toReturn[index];
-			index++;
+		if(eightBitByteArray != null){
+			int[] toReturn = new int[eightBitByteArray.length / 2];
+			float avg = 0;
+			int index = 0;
+			
+			for(int audioByte = high ? 1 : 0; audioByte < eightBitByteArray.length; audioByte += 2) {
+				toReturn[index] = (int)eightBitByteArray[audioByte];
+				avg += toReturn[index];
+				index++;
+			}
+			
+			avg = avg / toReturn.length;
+			
+			if(control) {
+				if(avg < 0F)
+					avg = Math.abs(avg);
+				if(avg > 20F)
+					return (ClientProxy.flashyMode < 3 ? 10F : 20F);
+				else
+					return (int)(avg * (ClientProxy.flashyMode < 3 ? 1F : 2F));
+			}
+			return avg;
 		}
-		
-		avg = avg / toReturn.length;
-		
-		if(control) {
-			if(avg < 0F)
-				avg = Math.abs(avg);
-			if(avg > 20F)
-				return (ClientProxy.flashyMode < 3 ? 10F : 20F);
-			else
-				return (int)(avg * (ClientProxy.flashyMode < 3 ? 1F : 2F));
-		}
-		return avg;
+		return 0;
 	}
 	
 	private static int getSixteenBitSample(int high, int low) {

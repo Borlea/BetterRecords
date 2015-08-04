@@ -1,12 +1,13 @@
 package com.codingforcookies.betterrecords.src.packets;
 
+import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 
-import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
-
-import cpw.mods.fml.common.network.ByteBufUtils;
 
 public class PacketRecordPlayerOpen implements IPacket {
 	int x, y, z, dimension;
@@ -37,8 +38,8 @@ public class PacketRecordPlayerOpen implements IPacket {
 	}
 	
 	public void executeClient(EntityPlayer player) {
-		if(player.worldObj.provider.dimensionId == dimension) {
-			TileEntity te = player.worldObj.getTileEntity(x, y, z);
+		if(player.worldObj.provider.getDimensionId() == dimension) {
+			TileEntity te = player.worldObj.getTileEntity(new BlockPos(x, y, z));
 			if(te == null || !(te instanceof TileEntityRecordPlayer))
 				return;
 			

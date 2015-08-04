@@ -1,22 +1,28 @@
 package com.codingforcookies.betterrecords.src.client.models;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.opengl.GL11;
 
 import com.codingforcookies.betterrecords.src.StaticInfo;
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
 import com.codingforcookies.betterrecords.src.items.TileEntityLazer;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockAir;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+
 public class BlockLazerRenderer extends TileEntitySpecialRenderer {
 	public BlockLazerRenderer() { }
 
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale, int unknown) {
 		if(!(te instanceof TileEntityLazer))
 			return;
 		
@@ -45,11 +51,16 @@ public class BlockLazerRenderer extends TileEntitySpecialRenderer {
 					
 					float length = 10F;
 					
+					/*MovingObjectPosition ray = rayTrace(tileEntityLazer.getWorld(), tileEntityLazer.getPos(), pitch, yaw, length);
+					if(ray != null){
+						tileEntityLazer.getWorld().setBlockState(ray.getBlockPos(), Blocks.gold_block.getDefaultState());
+					}*/
+					/*
 					float yaw = tileEntityLazer.yaw;
 					float pitch = tileEntityLazer.pitch;
-					float startX = tileEntityLazer.xCoord - 0.5F;
-					float startY = tileEntityLazer.yCoord;
-					float startZ = tileEntityLazer.zCoord + .5F;
+					float startX = tileEntityLazer.getPos().getX() - 0.5F;
+					float startY = tileEntityLazer.getPos().getY();
+					float startZ = tileEntityLazer.getPos().getZ() + .5F;
 					float stopX = (float)(startX + length * Math.cos(yaw) * Math.cos(pitch));
 					float stopY = (float)(startY + length * Math.sin(yaw));
 					float stopZ = (float)(startZ + length * Math.cos(yaw) * Math.sin(pitch));
@@ -59,15 +70,15 @@ public class BlockLazerRenderer extends TileEntitySpecialRenderer {
 					for(float check = 1F; check < distance; check += .1F) {
 						length = check;
 						int posX = (int)(startX + check * Math.cos(yaw) * Math.cos(pitch));
-						int posY = (int)(startY + check * Math.sin(yaw)) + 1;
+						int posY = (int)(startY + (check - 2));//(int)(startY + check * Math.sin(yaw)) + 1;
 						int posZ = (int)(startZ + check * Math.cos(yaw) * Math.sin(pitch));
-						Block block = tileEntityLazer.getWorldObj().getBlock(posX, posY, posZ);
-						tileEntityLazer.getWorldObj().setBlock(posX, posY, posZ, Blocks.gold_block);
-						if(!(block instanceof BlockAir)) {
-							System.out.println(block.getLocalizedName());
-							tileEntityLazer.getWorldObj().setBlock(posX, posY, posZ, Blocks.gold_block);
+						Block block = tileEntityLazer.getWorld().getBlockState(new BlockPos(posX, posY, posZ)).getBlock();
+						//tileEntityLazer.getWorld().setBlockState(new BlockPos(posX, posY, posZ), Blocks.gold_block.getDefaultState());
+						if(block instanceof BlockAir) {
+							//System.out.println(block.getLocalizedName());
+							tileEntityLazer.getWorld().setBlockState(new BlockPos(posX, posY, posZ), Blocks.gold_block.getDefaultState());
 						}
-					}
+					}*/
 
 					float width = tileEntityLazer.bass / 400F;
 					GL11.glBegin(GL11.GL_QUADS);
@@ -107,4 +118,20 @@ public class BlockLazerRenderer extends TileEntitySpecialRenderer {
 		}
 		GL11.glPopMatrix();
 	}
+	
+	public MovingObjectPosition rayTrace(World world, BlockPos pos, float pitch, float yaw, double distance) {
+        Vec3 vec3 = new Vec3(pos.getX(), pos.getY(), pos.getZ());
+        Vec3 lookVec = getVectorForRotation(-pitch, -yaw);
+        Vec3 addedVector = vec3.addVector(lookVec.xCoord * distance, lookVec.yCoord * distance, lookVec.zCoord * distance);
+        return world.rayTraceBlocks(vec3, addedVector, false, false, true);
+    }
+	
+	protected final Vec3 getVectorForRotation(float pitch, float yaw){
+        float f2 = MathHelper.cos(-yaw * 0.017453292F - (float)Math.PI);
+        float f3 = MathHelper.sin(-yaw * 0.017453292F - (float)Math.PI);
+        float f4 = -MathHelper.cos(-pitch * 0.017453292F);
+        float f5 = MathHelper.sin(-pitch * 0.017453292F);
+        return new Vec3((double)(f3 * f4), (double)f5, (double)(f2 * f4));
+    }
+	
 }

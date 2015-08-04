@@ -3,6 +3,8 @@ package com.codingforcookies.betterrecords.src.client.sound;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.FloatControl;
+
 public class SoundManager {
 	public boolean repeat = false;
 	public int current = -1;
@@ -27,9 +29,11 @@ public class SoundManager {
 
 	public Sound nextSong() {
 		current++;
-		if(current >= songs.size() && repeat)
+		if(current >= songs.size() && repeat){
+			for(Sound s : songs)
+				s.volume = null;
 			current = 0;
+		}
 		return getCurrentSong();
 	}
-	
 }

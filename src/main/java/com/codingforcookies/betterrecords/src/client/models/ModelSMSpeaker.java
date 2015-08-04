@@ -10,7 +10,7 @@ public class ModelSMSpeaker extends ModelBase {
 
 	public ModelSMSpeaker() {
 		textureWidth = 64;
-		textureHeight = 32;
+		textureHeight = 64;
 
 		wool = new ModelRenderer(this, 32, 0);
 		wool.addBox(-4F, 1F, -5.5F, 6, 8, 1);

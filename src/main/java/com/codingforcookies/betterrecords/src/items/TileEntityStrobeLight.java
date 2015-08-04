@@ -2,18 +2,19 @@ package com.codingforcookies.betterrecords.src.items;
 
 import java.util.ArrayList;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
-
 import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordAmplitude;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
 import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
 
-public class TileEntityStrobeLight extends TileEntity implements IRecordWire, IRecordAmplitude {
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.tileentity.TileEntity;
+
+public class TileEntityStrobeLight extends TileEntity implements IRecordWire, IRecordAmplitude, IUpdatePlayerListBox {
 	public ArrayList<RecordConnection> connections = null;
 	public ArrayList<RecordConnection> getConnections() { return connections; }
 	
@@ -34,7 +35,7 @@ public class TileEntityStrobeLight extends TileEntity implements IRecordWire, IR
 		connections = new ArrayList<RecordConnection>();
 	}
 	
-	public void updateEntity() {
+	public void update() {
 		if(bass > 0F)
 			bass--;
 		if(bass < 0F)
@@ -57,10 +58,10 @@ public class TileEntityStrobeLight extends TileEntity implements IRecordWire, IR
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+        return new S35PacketUpdateTileEntity(getPos(), 1, nbt);
 	}
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)  { 
-		readFromNBT(pkt.func_148857_g());
+		readFromNBT(pkt.getNbtCompound());
 	}
 }

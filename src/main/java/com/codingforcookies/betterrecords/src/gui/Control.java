@@ -1,8 +1,8 @@
 package com.codingforcookies.betterrecords.src.gui;
 
-import net.minecraft.client.gui.FontRenderer;
-
 import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.gui.FontRenderer;
 
 public class Control {
 	public ControlType type;

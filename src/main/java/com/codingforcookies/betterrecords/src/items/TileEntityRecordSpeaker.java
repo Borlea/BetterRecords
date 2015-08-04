@@ -2,16 +2,16 @@ package com.codingforcookies.betterrecords.src.items;
 
 import java.util.ArrayList;
 
+import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
+import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
+import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-
-import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
-import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
-import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
 
 public class TileEntityRecordSpeaker extends TileEntity implements IRecordWire {
 	public ArrayList<RecordConnection> connections = null;
@@ -28,10 +28,6 @@ public class TileEntityRecordSpeaker extends TileEntity implements IRecordWire {
 	
 	public TileEntityRecordSpeaker() {
 		connections = new ArrayList<RecordConnection>();
-	}
-	
-	public boolean canUpdate() {
-		return false;
 	}
 	
 	public void readFromNBT(NBTTagCompound compound) {
@@ -56,11 +52,11 @@ public class TileEntityRecordSpeaker extends TileEntity implements IRecordWire {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+        return new S35PacketUpdateTileEntity(getPos(), 1, nbt);
 	}
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)  { 
-		readFromNBT(pkt.func_148857_g());
-		Minecraft.getMinecraft().renderGlobal.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+		readFromNBT(pkt.getNbtCompound());
+		Minecraft.getMinecraft().renderGlobal.markBlockForUpdate(getPos());
 	} 
 }

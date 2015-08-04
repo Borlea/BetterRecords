@@ -2,13 +2,6 @@ package com.codingforcookies.betterrecords.src.client.models;
 
 import java.util.Map.Entry;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.opengl.GL11;
 
 import com.codingforcookies.betterrecords.src.StaticInfo;
@@ -16,10 +9,17 @@ import com.codingforcookies.betterrecords.src.betterenums.IRecordWireManipulator
 import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
 import com.codingforcookies.betterrecords.src.items.TileEntityRadio;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+
 public class BlockRadioRenderer extends TileEntitySpecialRenderer {
 	public BlockRadioRenderer() { }
 	
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale, int unknown) {
 		if(!(te instanceof TileEntityRadio))
 			return;
 		
@@ -36,9 +36,9 @@ public class BlockRadioRenderer extends TileEntitySpecialRenderer {
 					
 					GL11.glLineWidth(2F);
 					for(RecordConnection rec : tileEntityRadio.getConnections()) {
-						int x1 = -(tileEntityRadio.xCoord - rec.x2);
-						int y1 = -(tileEntityRadio.yCoord - rec.y2);
-						int z1 = -(tileEntityRadio.zCoord - rec.z2);
+						int x1 = -(tileEntityRadio.getPos().getX() - rec.pos2.getX());
+						int y1 = -(tileEntityRadio.getPos().getY() - rec.pos2.getY());
+						int z1 = -(tileEntityRadio.getPos().getZ() - rec.pos2.getZ());
 						GL11.glPushMatrix();
 						{
 							GL11.glBegin(GL11.GL_LINE_STRIP);
@@ -56,10 +56,10 @@ public class BlockRadioRenderer extends TileEntitySpecialRenderer {
 				}
 				
 				GL11.glScalef(.01F, -.01F, .01F);
-	            GL11.glRotatef(-RenderManager.instance.playerViewY - 180F, 0F, 1F, 0F);
+	            GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY - 180F, 0F, 1F, 0F);
 	            GL11.glColor3f(1F, 1F, 1F);
 				int currentY = tileEntityRadio.wireSystemInfo.size() * -10 - 75;
-				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 				fontRenderer.drawString("Play Radius: " + tileEntityRadio.getSongRadius(), -fontRenderer.getStringWidth("Play Radius: " + tileEntityRadio.getSongRadius()) / 2, currentY, 0xFFFFFF);
 				for(Entry<String, Integer> nfo : tileEntityRadio.wireSystemInfo.entrySet()) {
 					currentY += 10;
@@ -73,7 +73,10 @@ public class BlockRadioRenderer extends TileEntitySpecialRenderer {
 		{
 			GL11.glTranslatef((float)x + 0.5F, (float)y + 1.5F, (float)z + 0.5F);
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(te.blockMetadata * 90 + 180, 0.0F, 1.0F, 0.0F);
+			if(te.getBlockMetadata() == 3 || te.getBlockMetadata() == 4)
+				GL11.glRotatef(te.getBlockMetadata() * (90) - 90, 0.0F, 1.0F, 0.0F);
+			else if(te.getBlockMetadata() == 5)
+				GL11.glRotatef(te.getBlockMetadata() * (90), 0.0F, 1.0F, 0.0F);
 			bindTexture(StaticInfo.modelRadioRes);
 			StaticInfo.modelRadio.render((Entity)null, tileEntityRadio.openAmount, tileEntityRadio.crystalFloaty, 0F, 0.0F, 0.0F, 0.0625F, tileEntityRadio.crystal);
 		}

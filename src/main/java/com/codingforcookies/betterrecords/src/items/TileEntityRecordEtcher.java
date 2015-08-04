@@ -2,20 +2,26 @@ package com.codingforcookies.betterrecords.src.items;
 
 import com.codingforcookies.betterrecords.src.BetterRecords;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityRecordEtcher extends TileEntity implements IInventory {
+public class TileEntityRecordEtcher extends TileEntity implements IInventory, IUpdatePlayerListBox {
 	public ItemStack record = null;
 	public EntityItem recordEntity;
 	
@@ -36,20 +42,13 @@ public class TileEntityRecordEtcher extends TileEntity implements IInventory {
 
 		record = par1ItemStack.copy();
 		record.stackSize = 1;
-		recordEntity = new EntityItem(worldObj, xCoord, yCoord, zCoord, record);
+		recordEntity = new EntityItem(worldObj, pos.getX(), pos.getY(), pos.getZ(), record);
 		recordEntity.hoverStart = 0;
 		recordRotation = 0F;
 	}
-	
-	@SideOnly(Side.SERVER)
-	public boolean canUpdate() {
-		return false;
-	}
-	
+
 	@SideOnly(Side.CLIENT)
-	public void updateEntity() {
-		super.updateEntity();
-		
+	public void update() {
 		if(record != null) {
 			recordRotation += 0.08F;
 			if(needleOut)
@@ -72,8 +71,6 @@ public class TileEntityRecordEtcher extends TileEntity implements IInventory {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		
-		if(compound.hasKey("rotation"))
-			blockMetadata = compound.getInteger("rotation");
 		if(compound.hasKey("record"))
 			setRecord(ItemStack.loadItemStackFromNBT(compound.getCompoundTag("record")));
 	}
@@ -81,7 +78,7 @@ public class TileEntityRecordEtcher extends TileEntity implements IInventory {
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		
-		compound.setInteger("rotation", blockMetadata);
+		compound.setInteger("rotation", getBlockMetadata());
 		compound.setTag("record", getStackTagCompound(record));
 	}
 
@@ -95,12 +92,12 @@ public class TileEntityRecordEtcher extends TileEntity implements IInventory {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+        return new S35PacketUpdateTileEntity(pos, 1, nbt);
 	}
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)  { 
-		readFromNBT(pkt.func_148857_g());
-		Minecraft.getMinecraft().renderGlobal.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+		readFromNBT(pkt.getNbtCompound());
+		Minecraft.getMinecraft().renderGlobal.markBlockForUpdate(pos);
 	}
 	
 	public int getSizeInventory() {
@@ -134,11 +131,11 @@ public class TileEntityRecordEtcher extends TileEntity implements IInventory {
 		setRecord(itemStack);
 	}
 	
-	public String getInventoryName() {
+	public String getName() {
 		return "Record Etcher";
 	}
 	
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return true;
 	}
 	
@@ -147,14 +144,41 @@ public class TileEntityRecordEtcher extends TileEntity implements IInventory {
 	}
 	
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return worldObj.getTileEntity(xCoord, yCoord, zCoord) == this && player.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < 64;
+		return worldObj.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < 64;
 	}
 	
-	public void openInventory() { }
-	
-	public void closeInventory() { }
-	
 	public boolean isItemValidForSlot(int slot, ItemStack itemStack) {
-		return itemStack.getItem() == BetterRecords.itemURLRecord && (!itemStack.hasTagCompound() || !itemStack.stackTagCompound.hasKey("url"));
+		return itemStack.getItem() == BetterRecords.itemURLRecord && (!itemStack.hasTagCompound() || !itemStack.getTagCompound().hasKey("url"));
+	}
+
+	@Override
+	public IChatComponent getDisplayName(){
+		return null;
+	}
+
+	@Override
+	public void openInventory(EntityPlayer player){}
+
+	@Override
+	public void closeInventory(EntityPlayer player){}
+
+	@Override
+	public int getField(int id){
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value){}
+
+	@Override
+	public int getFieldCount(){
+		return 0;
+	}
+
+	@Override
+	public void clear(){}
+	
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return newState.getBlock() == Blocks.air ? true : false;
 	}
 }

@@ -8,13 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-
 import org.lwjgl.input.Keyboard;
 
 import com.codingforcookies.betterrecords.src.BetterRecords;
@@ -38,8 +31,14 @@ import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
 import com.codingforcookies.betterrecords.src.items.TileEntityRecordSpeaker;
 import com.codingforcookies.betterrecords.src.items.TileEntityStrobeLight;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class ClientProxy extends CommonProxy {
 	public static ClientProxy instance;
@@ -119,27 +118,18 @@ public class ClientProxy extends CommonProxy {
 		
 		MinecraftForge.EVENT_BUS.register(new BetterEventHandler());
 		FMLCommonHandler.instance().bus().register(new BetterEventHandler());
-
+		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRecordEtcher.class, new BlockRecordEtcherRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockRecordEtcher), new ClientItemRenderer());	
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRecordPlayer.class, new BlockRecordPlayerRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockRecordPlayer), new ClientItemRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFrequencyTuner.class, new BlockFrequencyTunerRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockFrequencyTuner), new ClientItemRenderer());	
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadio.class, new BlockRadioRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockRadio), new ClientItemRenderer());
 		
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRecordSpeaker.class, new BlockRecordSpeakerRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockSMSpeaker), new ClientItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockMDSpeaker), new ClientItemRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockLGSpeaker), new ClientItemRenderer());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStrobeLight.class, new BlockStrobeLightRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockStrobeLight), new ClientItemRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLazer.class, new BlockLazerRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockLazer), new ClientItemRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLazerCluster.class, new BlockLazerClusterRenderer());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BetterRecords.blockLazerCluster), new ClientItemRenderer());
+		
 	}
 	
 	public static void loadConfig() {

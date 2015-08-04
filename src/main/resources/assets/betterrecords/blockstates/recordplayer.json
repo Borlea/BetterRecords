@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "normal": { "model": "betterrecords:recordplayer" },
+		"facing=north": { "model": "betterrecords:recordplayer" },
+        "facing=south": { "model": "betterrecords:recordplayer", "y": 180 },
+        "facing=west":  { "model": "betterrecords:recordplayer", "y": 270 },
+        "facing=east":  { "model": "betterrecords:recordplayer", "y": 90 }
+    }
+}

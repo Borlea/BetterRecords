@@ -1,18 +1,18 @@
 package com.codingforcookies.betterrecords.src.client.models;
 
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
-
 import org.lwjgl.opengl.GL11;
 
 import com.codingforcookies.betterrecords.src.client.ClientProxy;
 import com.codingforcookies.betterrecords.src.items.TileEntityLazerCluster;
 
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
+
 public class BlockLazerClusterRenderer extends TileEntitySpecialRenderer {
 	public BlockLazerClusterRenderer() { }
 
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale, int unknown) {
 		if(!(te instanceof TileEntityLazerCluster))
 			return;
 

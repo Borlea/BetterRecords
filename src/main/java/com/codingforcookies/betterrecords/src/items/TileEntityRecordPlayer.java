@@ -3,24 +3,35 @@ package com.codingforcookies.betterrecords.src.items;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.codingforcookies.betterrecords.src.BetterRecords;
+import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
+import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
+import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
+import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
+import com.google.common.base.Predicate;
+
+import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
-import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
-import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
-import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, IRecordWireHome {
+public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, IRecordWireHome, IUpdatePlayerListBox {
+	
+			
 	public ArrayList<Float> formTreble = new ArrayList<Float>();
 	public synchronized void addTreble(float form) { formTreble.add(form); }
 	public ArrayList<Float> formBass = new ArrayList<Float>();
@@ -83,22 +94,15 @@ public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, I
 
 		record = par1ItemStack.copy();
 		record.stackSize = 1;
-		recordEntity = new EntityItem(worldObj, xCoord, yCoord, zCoord, record);
+		recordEntity = new EntityItem(worldObj, pos.getX(), pos.getY(), pos.getZ(), record);
 		recordEntity.hoverStart = 0;
 		recordEntity.rotationPitch = 0F;
 		recordEntity.rotationYaw = 0F;
 		recordRotation = 0F;
 	}
 	
-	@SideOnly(Side.SERVER)
-	public boolean canUpdate() {
-		return false;
-	}
-	
 	@SideOnly(Side.CLIENT)
-	public void updateEntity() {
-		super.updateEntity();
-		
+	public void update() {
 		if(opening) {
 			if(openAmount > -0.8F)
 				openAmount -= 0.08F;
@@ -134,9 +138,7 @@ public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, I
 
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		
-		if(compound.hasKey("rotation"))
-			blockMetadata = compound.getInteger("rotation");
+
 		if(compound.hasKey("record"))
 			setRecord(ItemStack.loadItemStackFromNBT(compound.getCompoundTag("record")));
 		if(compound.hasKey("opening"))
@@ -152,7 +154,6 @@ public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, I
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		
-		compound.setFloat("rotation", blockMetadata);
 		compound.setTag("record", getStackTagCompound(record));
 		compound.setBoolean("opening", opening);
 		compound.setString("connections", ConnectionHelper.serializeConnections(connections));
@@ -170,11 +171,15 @@ public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, I
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+        return new S35PacketUpdateTileEntity(pos, 1, nbt);
 	}
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)  { 
-		readFromNBT(pkt.func_148857_g());
-		Minecraft.getMinecraft().renderGlobal.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+		readFromNBT(pkt.getNbtCompound());
+		Minecraft.getMinecraft().renderGlobal.markBlockForUpdate(pos);
+	}
+	
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState){
+		return newState.getBlock() == Blocks.air ? true : false;
 	}
 }

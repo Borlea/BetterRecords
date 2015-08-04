@@ -2,24 +2,27 @@ package com.codingforcookies.betterrecords.src.client.models;
 
 import java.util.Map.Entry;
 
+import org.lwjgl.opengl.GL11;
+
+import com.codingforcookies.betterrecords.src.StaticInfo;
+import com.codingforcookies.betterrecords.src.betterenums.IRecordWireManipulator;
+import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
+import com.codingforcookies.betterrecords.src.items.BlockRecordPlayer;
+import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
+
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
-
-import org.lwjgl.opengl.GL11;
-
-import com.codingforcookies.betterrecords.src.StaticInfo;
-import com.codingforcookies.betterrecords.src.betterenums.IRecordWireManipulator;
-import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
-import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
+import net.minecraft.util.EnumFacing;
 
 public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 	public BlockRecordPlayerRenderer() { }
 	
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale, int unknown) {
 		if(!(te instanceof TileEntityRecordPlayer))
 			return;
 		
@@ -36,9 +39,9 @@ public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 					
 					GL11.glLineWidth(2F);
 					for(RecordConnection rec : tileEntityRecordPlayer.getConnections()) {
-						int x1 = -(tileEntityRecordPlayer.xCoord - rec.x2);
-						int y1 = -(tileEntityRecordPlayer.yCoord - rec.y2);
-						int z1 = -(tileEntityRecordPlayer.zCoord - rec.z2);
+						int x1 = -(tileEntityRecordPlayer.getPos().getX() - rec.pos2.getX());
+						int y1 = -(tileEntityRecordPlayer.getPos().getY() - rec.pos2.getY());
+						int z1 = -(tileEntityRecordPlayer.getPos().getZ() - rec.pos2.getZ());
 						GL11.glPushMatrix();
 						{
 							GL11.glBegin(GL11.GL_LINE_STRIP);
@@ -56,10 +59,10 @@ public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 				}
 				
 				GL11.glScalef(.01F, -.01F, .01F);
-	            GL11.glRotatef(-RenderManager.instance.playerViewY - 180F, 0F, 1F, 0F);
+	            GL11.glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY - 180F, 0F, 1F, 0F);
 
 				
-				if(tileEntityRecordPlayer.formTreble.size() != 0) {
+				/*if(tileEntityRecordPlayer.formTreble.size() != 0) {
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					
 					GL11.glPushMatrix();
@@ -117,12 +120,12 @@ public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 					
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					GL11.glColor3f(1F, 1F, 1F);
-				}
+				}*/
 	            
 	            
 	            GL11.glColor3f(1F, 1F, 1F);
 				int currentY = tileEntityRecordPlayer.wireSystemInfo.size() * -10 - 75;
-				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+				FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
 				fontRenderer.drawString("Play Radius: " + tileEntityRecordPlayer.getSongRadius(), -fontRenderer.getStringWidth("Play Radius: " + tileEntityRecordPlayer.getSongRadius()) / 2, currentY, 0xFFFFFF);
 				for(Entry<String, Integer> nfo : tileEntityRecordPlayer.wireSystemInfo.entrySet()) {
 					currentY += 10;
@@ -139,14 +142,14 @@ public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 				GL11.glScalef(2F, 2F, 2F);
 				GL11.glRotatef(90F, 1F, 0F, 0F);
 				GL11.glRotatef(tileEntityRecordPlayer.recordRotation * 57.3F, 0F, 0F, 1F);
-				GL11.glTranslatef(0F, -.225F, 0F);
+				GL11.glTranslatef(0F, -.35F, 0F);
 				GL11.glDisable(GL11.GL_LIGHTING);
 				GL11.glDisable(GL11.GL_CULL_FACE);
 				if(Minecraft.getMinecraft().gameSettings.fancyGraphics)
-					RenderManager.instance.renderEntityWithPosYaw(tileEntityRecordPlayer.recordEntity, 0, 0, 0, 0, 0);
+					Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(tileEntityRecordPlayer.recordEntity, 0, 0, 0, 0, 0);
 				else{
 					Minecraft.getMinecraft().gameSettings.fancyGraphics = true;
-					RenderManager.instance.renderEntityWithPosYaw(tileEntityRecordPlayer.recordEntity, 0, 0, 0, 0, 0);
+					Minecraft.getMinecraft().getRenderManager().renderEntityWithPosYaw(tileEntityRecordPlayer.recordEntity, 0, 0, 0, 0, 0);
 					Minecraft.getMinecraft().gameSettings.fancyGraphics = false;
 				}
 				GL11.glEnable(GL11.GL_CULL_FACE);
@@ -160,7 +163,10 @@ public class BlockRecordPlayerRenderer extends TileEntitySpecialRenderer {
 		{
 			GL11.glTranslatef((float)x + 0.5F, (float)y + 1.5F, (float)z + 0.5F);
 			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(te.blockMetadata * (90) + 180, 0.0F, 1.0F, 0.0F);
+			if(te.getBlockMetadata() == 3 || te.getBlockMetadata() == 4)
+				GL11.glRotatef(te.getBlockMetadata() * (90) - 90, 0.0F, 1.0F, 0.0F);
+			else if(te.getBlockMetadata() == 5)
+				GL11.glRotatef(te.getBlockMetadata() * (90), 0.0F, 1.0F, 0.0F);
 			bindTexture(StaticInfo.modelRecordPlayerRes);
 			StaticInfo.modelRecordPlayer.render((Entity)null, tileEntityRecordPlayer.openAmount, tileEntityRecordPlayer.needleLocation, tileEntityRecordPlayer.recordRotation, 0.0F, 0.0F, 0.0625F);
 		}

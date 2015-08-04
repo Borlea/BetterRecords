@@ -5,11 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.util.StatCollector;
-
 import org.apache.commons.io.FilenameUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -17,6 +12,11 @@ import com.codingforcookies.betterrecords.src.StaticInfo;
 import com.codingforcookies.betterrecords.src.client.sound.IcyURLConnection;
 import com.codingforcookies.betterrecords.src.items.TileEntityFrequencyTuner;
 import com.codingforcookies.betterrecords.src.packets.PacketHandler;
+
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.StatCollector;
 
 public class GuiFrequencyTuner extends GuiContainer {
 	TileEntityFrequencyTuner tileEntity;
@@ -35,12 +35,12 @@ public class GuiFrequencyTuner extends GuiContainer {
 	public void initGui() {
 		super.initGui();
 		
-		nameField = new GuiTextField(this.fontRendererObj, 44, 20, 124, 10);
-		urlField = new GuiTextField(this.fontRendererObj, 44, 35, 124, 10);
+		nameField = new GuiTextField(0, this.fontRendererObj, 44, 20, 124, 10);
+		urlField = new GuiTextField(1, this.fontRendererObj, 44, 35, 124, 10);
 		urlField.setMaxStringLength(128);
 	}
 	
-	protected void keyTyped(char par1, int par2) {
+	protected void keyTyped(char par1, int par2) throws IOException {
 		checkedURL = false;
 		checkURLTime = System.currentTimeMillis() + 2000;
 		
@@ -52,7 +52,7 @@ public class GuiFrequencyTuner extends GuiContainer {
 			super.keyTyped(par1, par2);
 	}
 	
-	protected void mouseClicked(int par1, int par2, int par3) {
+	protected void mouseClicked(int par1, int par2, int par3) throws IOException {
 		super.mouseClicked(par1, par2, par3);
 		int x = par1 - (width - xSize) / 2;
 		int y = par2 - (height - ySize) / 2;
@@ -64,7 +64,7 @@ public class GuiFrequencyTuner extends GuiContainer {
 			String superName = FilenameUtils.getName(urlField.getText());
 			superName = superName.split("#")[0];
 			superName = superName.split("\\?")[0];
-			PacketHandler.sendURLWriteFromClient(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, superName, urlField.getText(), nameField.getText(), 0);
+			PacketHandler.sendURLWriteFromClient(tileEntity.getPos(), superName, urlField.getText(), nameField.getText(), 0);
 		}
 	}
 
@@ -91,7 +91,7 @@ public class GuiFrequencyTuner extends GuiContainer {
 		
 		if(tileEntity.crystal == null)
 			error = "No crystal to tune";
-		else if(tileEntity.crystal.hasTagCompound() && tileEntity.crystal.stackTagCompound.hasKey("url"))
+		else if(tileEntity.crystal.hasTagCompound() && tileEntity.crystal.getTagCompound().hasKey("url"))
 			error = "Crystal already tuned";
 		else if(nameField.getText().length() == 0)
 			error = "Please insert a name";

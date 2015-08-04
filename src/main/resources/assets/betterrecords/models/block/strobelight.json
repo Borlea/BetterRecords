@@ -1,0 +1,47 @@
+{
+    "textures": {
+        "0": "betterrecords:blocks/strobelight",
+		"particle": "betterrecords:blocks/breaktexture"
+    },
+    "elements": [
+        {
+            "name": "Base",
+            "from": [ 4.0, 0.0, 4.0 ], 
+            "to": [ 12.0, 3.0, 12.0 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 5.8, 2.0, 6.5 ] },
+                "east": { "texture": "#0", "uv": [ 2.0, 5.8, 4.0, 6.5 ] },
+                "south": { "texture": "#0", "uv": [ 4.0, 5.8, 6.0, 6.5 ] },
+                "west": { "texture": "#0", "uv": [ 6.0, 5.8, 8.0, 6.5 ] },
+                "up": { "texture": "#0", "uv": [ 2.0, 3.8, 4.0, 5.7 ] },
+                "down": { "texture": "#0", "uv": [ 4.0, 3.8, 6.0, 5.7 ] }
+            }
+        },
+        {
+            "name": "Light",
+            "from": [ 6.5, 3.0, 6.5 ], 
+            "to": [ 9.5, 7.0, 9.5 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 7.0, 1.0, 8.0, 1.7 ] },
+                "east": { "texture": "#0", "uv": [ 7.0, 1.0, 8.0, 1.7 ] },
+                "south": { "texture": "#0", "uv": [ 7.0, 1.0, 8.0, 1.7 ] },
+                "west": { "texture": "#0", "uv": [ 7.0, 1.0, 8.0, 1.7 ] },
+                "up": { "texture": "#0", "uv": [ 7.0, 1.0, 8.0, 1.7 ] },
+                "down": { "texture": "#0", "uv": [ 7.0, 1.0, 8.0, 1.7 ] }
+            }
+        },
+        {
+            "name": "Cube",
+            "from": [ 4.5, 3.0, 4.5 ], 
+            "to": [ 11.5, 11.0, 11.5 ], 
+            "faces": {
+                "north": { "texture": "#0", "uv": [ 0.0, 1.8, 1.7, 3.7 ], "cullface": "north" },
+                "east": { "texture": "#0", "uv": [ 0.0, 1.8, 1.7, 3.7 ], "cullface": "east" },
+                "south": { "texture": "#0", "uv": [ 0.0, 1.8, 1.7, 3.7 ], "cullface": "south" },
+                "west": { "texture": "#0", "uv": [ 0.0, 1.8, 1.7, 3.7 ], "cullface": "west" },
+                "up": { "texture": "#0", "uv": [ 1.8, 0.0, 3.5, 1.7 ], "cullface": "up" },
+                "down": { "texture": "#0", "uv": [ 3.6, 0.0, 6.0, 1.7 ], "cullface": "down" }
+            }
+        }
+    ]
+}

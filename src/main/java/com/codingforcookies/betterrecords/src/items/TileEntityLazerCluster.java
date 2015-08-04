@@ -3,21 +3,20 @@ package com.codingforcookies.betterrecords.src.items;
 import java.util.ArrayList;
 import java.util.Random;
 
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
-
 import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordAmplitude;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
 import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityLazerCluster extends TileEntity implements IRecordWire, IRecordAmplitude {
+public class TileEntityLazerCluster extends TileEntity implements IRecordWire, IRecordAmplitude, IUpdatePlayerListBox {
 	public ArrayList<RecordConnection> connections = null;
 	public ArrayList<RecordConnection> getConnections() { return connections; }
 	
@@ -62,13 +61,7 @@ public class TileEntityLazerCluster extends TileEntity implements IRecordWire, I
 		connections = new ArrayList<RecordConnection>();
 	}
 	
-	@SideOnly(Side.SERVER)
-	public boolean canUpdate() {
-		return false;
-	}
-	
-	public void updateEntity() {
-		super.updateEntity();
+	public void update() {
 		
 		if(bass > 0F)
 			bass--;
@@ -92,10 +85,10 @@ public class TileEntityLazerCluster extends TileEntity implements IRecordWire, I
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbt = new NBTTagCompound();
         writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
+        return new S35PacketUpdateTileEntity(getPos(), 1, nbt);
 	}
 	
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)  { 
-		readFromNBT(pkt.func_148857_g());
+		readFromNBT(pkt.getNbtCompound());
 	}
 }

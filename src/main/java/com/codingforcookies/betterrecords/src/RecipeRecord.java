@@ -42,4 +42,16 @@ public class RecipeRecord implements IRecipe {
 	public ItemStack getRecipeOutput() {
 		return new ItemStack(BetterRecords.itemURLRecord);
 	}
+
+	@Override
+	public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting){
+        ItemStack[] aitemstack = new ItemStack[inventoryCrafting.getSizeInventory()];
+
+        for (int i = 0; i < aitemstack.length; ++i){
+            ItemStack itemstack = inventoryCrafting.getStackInSlot(i);
+            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+        }
+
+        return aitemstack;
+	}
 }

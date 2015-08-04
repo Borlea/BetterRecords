@@ -2,18 +2,19 @@ package com.codingforcookies.betterrecords.src.client.sound;
 
 import javax.sound.sampled.FloatControl;
 
+import net.minecraft.util.BlockPos;
+
 public class Sound { 
 	public String name, url, local;
-	public int x, y, z, dimension;
+	public BlockPos pos;
+	public int dimension;
 	public float playRadius = 40F;
 	public FloatControl volume = null;
 	
 	public Sound() { }
 	
-	public Sound(int x, int y, int z, int dimension, float playRadius) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	public Sound(BlockPos pos, int dimension, float playRadius) {
+		this.pos = pos;
 		this.dimension = dimension;
 		this.playRadius = playRadius;
 	}

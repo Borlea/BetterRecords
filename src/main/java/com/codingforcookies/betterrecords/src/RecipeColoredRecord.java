@@ -2,16 +2,17 @@ package com.codingforcookies.betterrecords.src;
 
 import java.util.ArrayList;
 
+import com.codingforcookies.betterrecords.src.items.ItemURLRecord;
+
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import com.codingforcookies.betterrecords.src.items.ItemURLRecord;
 
 public class RecipeColoredRecord implements IRecipe {
 	//If something changes, check RecipesArmorDyes
@@ -77,7 +78,7 @@ public class RecipeColoredRecord implements IRecipe {
 					if(itemstack1.getItem() != Items.dye)
 						return null;
 
-					float[] afloat = EntitySheep.fleeceColorTable[BlockColored.func_150032_b(itemstack1.getItemDamage())];
+					float[] afloat = EntitySheep.func_175513_a(EnumDyeColor.values()[itemstack1.getItemDamage()]);
 					int j1 = (int)(afloat[0] * 255.0F);
 					int k1 = (int)(afloat[1] * 255.0F);
 					l1 = (int)(afloat[2] * 255.0F);
@@ -104,7 +105,7 @@ public class RecipeColoredRecord implements IRecipe {
 			l1 = (k << 8) + i1;
 			l1 = (l1 << 8) + currentColor;
 			if(!itemToColor.hasTagCompound())
-				itemToColor.stackTagCompound = new NBTTagCompound();
+				itemToColor.setTagCompound(new NBTTagCompound());
 			itemToColor.getTagCompound().setInteger("color", l1);
 			return itemToColor;
 		}
@@ -116,5 +117,17 @@ public class RecipeColoredRecord implements IRecipe {
 
 	public ItemStack getRecipeOutput() {
 		return null;
+	}
+
+	@Override
+	public ItemStack[] getRemainingItems(InventoryCrafting inventoryCrafting){
+        ItemStack[] aitemstack = new ItemStack[inventoryCrafting.getSizeInventory()];
+
+        for (int i = 0; i < aitemstack.length; ++i){
+            ItemStack itemstack = inventoryCrafting.getStackInSlot(i);
+            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+        }
+
+        return aitemstack;
 	}
 }

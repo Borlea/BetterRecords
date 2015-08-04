@@ -1,10 +1,10 @@
 package com.codingforcookies.betterrecords.src.client.models;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
-import org.lwjgl.opengl.GL11;
 
 public class ModelLazer extends ModelBase {
 	ModelRenderer Stand;
@@ -14,7 +14,7 @@ public class ModelLazer extends ModelBase {
 
 	public ModelLazer() {
 		textureWidth = 64;
-		textureHeight = 32;
+		textureHeight = 64;
 		
 		Stand = new ModelRenderer(this, 0, 16);
 		Stand.addBox(-1.5F, -6F, -1.5F, 3, 6, 3);

@@ -1,0 +1,25 @@
+{
+    "variants": {
+        "normal": { "model": "betterrecords:frequencytuner" },
+		"facing=north": { "model": "betterrecords:frequencytuner" },
+        "facing=south": { "model": "betterrecords:frequencytuner", "y": 180 },
+        "facing=west":  { "model": "betterrecords:frequencytuner", "y": 270 },
+        "facing=east":  { "model": "betterrecords:frequencytuner", "y": 90 },
+		"rotation=0": { "model": "betterrecords:frequencytuner" },
+		"rotation=1": { "model": "betterrecords:frequencytuner" },
+		"rotation=2": { "model": "betterrecords:frequencytuner" },
+		"rotation=3": { "model": "betterrecords:frequencytuner" },
+		"rotation=4": { "model": "betterrecords:frequencytuner" },
+		"rotation=5": { "model": "betterrecords:frequencytuner" },
+		"rotation=6": { "model": "betterrecords:frequencytuner" },
+		"rotation=7": { "model": "betterrecords:frequencytuner" },
+		"rotation=8": { "model": "betterrecords:frequencytuner" },
+		"rotation=9": { "model": "betterrecords:frequencytuner" },
+		"rotation=10": { "model": "betterrecords:frequencytuner" },
+		"rotation=11": { "model": "betterrecords:frequencytuner" },
+		"rotation=12": { "model": "betterrecords:frequencytuner" },
+		"rotation=13": { "model": "betterrecords:frequencytuner" },
+		"rotation=14": { "model": "betterrecords:frequencytuner" },
+		"rotation=15": { "model": "betterrecords:frequencytuner" }
+    }
+}

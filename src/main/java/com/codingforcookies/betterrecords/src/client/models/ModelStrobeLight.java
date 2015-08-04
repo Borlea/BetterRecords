@@ -13,7 +13,7 @@ public class ModelStrobeLight extends ModelBase {
 
 	public ModelStrobeLight() {
 		textureWidth = 64;
-		textureHeight = 32;
+		textureHeight = 64;
 		
 		Base = new ModelRenderer(this, 0, 15);
 		Base.addBox(-4F, -2F, -4F, 8, 3, 8);

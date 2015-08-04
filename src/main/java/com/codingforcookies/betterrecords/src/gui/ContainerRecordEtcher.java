@@ -1,12 +1,15 @@
 package com.codingforcookies.betterrecords.src.gui;
 
+import com.codingforcookies.betterrecords.src.BetterRecords;
+import com.codingforcookies.betterrecords.src.items.ItemURLMultiRecord;
+import com.codingforcookies.betterrecords.src.items.ItemURLRecord;
+import com.codingforcookies.betterrecords.src.items.TileEntityRecordEtcher;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import com.codingforcookies.betterrecords.src.items.TileEntityRecordEtcher;
 
 public class ContainerRecordEtcher extends Container {
 	protected TileEntityRecordEtcher tileEntity;
@@ -28,7 +31,7 @@ public class ContainerRecordEtcher extends Container {
 		return tileEntity.isUseableByPlayer(player);
 	}
 	
-	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
 		return null;
 	}
 }

@@ -7,14 +7,16 @@ import com.codingforcookies.betterrecords.src.client.ClientProxy;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRecordSpeaker extends BlockContainer {
 	public static String[] speakers = new String[]{ "sm", "md", "lg" };
@@ -25,12 +27,12 @@ public class BlockRecordSpeaker extends BlockContainer {
 		this.meta = meta;
 	}
 	
-	public void onBlockAdded(World world, int x, int y, int z) {
-		super.onBlockAdded(world, x, y, z);
-		world.markBlockForUpdate(x, y, z);
+	public void onBlockAdded(World world, BlockPos pos, IBlockState state) {
+		super.onBlockAdded(world, pos, state);
+		world.markBlockForUpdate(pos);
 	}
 	
-	public void setBlockBoundsBasedOnState(IBlockAccess iBlockAccess, int x, int y, int z) {
+	public void setBlockBoundsBasedOnState(IBlockAccess iBlockAccess, BlockPos pos) {
 		switch(meta) {
 			case 0:
 				setBlockBounds(0.26F, 0.05F, 0.25F, 0.75F, 0.65F, 0.74F);
@@ -46,12 +48,12 @@ public class BlockRecordSpeaker extends BlockContainer {
 		}
 	}
 	
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack itemStack) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		TileEntity tileEntity = world.getTileEntity(pos);
 		if(tileEntity == null || !(tileEntity instanceof TileEntityRecordSpeaker))
 			return;
 		
-		((TileEntityRecordSpeaker)tileEntity).rotation = entityLiving.rotationYaw;
+		((TileEntityRecordSpeaker)tileEntity).rotation = placer.rotationYaw;
 		((TileEntityRecordSpeaker)tileEntity).type = meta;
 		
 		if(world.isRemote && !ClientProxy.tutorials.get("speaker")) {
@@ -61,15 +63,15 @@ public class BlockRecordSpeaker extends BlockContainer {
 		}
 	}
 	
-	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest) {
+    public boolean removedByPlayer(World world, BlockPos pos, EntityPlayer player, boolean willHarvest){
 		if(world.isRemote)
-			return super.removedByPlayer(world,player, x, y, z, willHarvest);
+			return super.removedByPlayer(world, pos, player, willHarvest);
 		
-		TileEntity te = world.getTileEntity(x, y, z);
+		TileEntity te = world.getTileEntity(pos);
 		if(te != null && te instanceof IRecordWire)
 			ConnectionHelper.clearConnections(world, (IRecordWire)te);
 		
-		return super.removedByPlayer(world,player, x, y, z, willHarvest);
+		return super.removedByPlayer(world, pos, player, willHarvest);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -79,11 +81,6 @@ public class BlockRecordSpeaker extends BlockContainer {
 	
 	@SideOnly(Side.CLIENT)
 	public boolean isOpaqueCube() {
-		return false;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public boolean renderAsNormalBlock() {
 		return false;
 	}
 	
