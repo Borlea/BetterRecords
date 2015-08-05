@@ -18,8 +18,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityRecordEtcher extends TileEntity implements IInventory, IUpdatePlayerListBox {
 	public ItemStack record = null;
@@ -47,7 +45,6 @@ public class TileEntityRecordEtcher extends TileEntity implements IInventory, IU
 		recordRotation = 0F;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void update() {
 		if(record != null) {
 			recordRotation += 0.08F;

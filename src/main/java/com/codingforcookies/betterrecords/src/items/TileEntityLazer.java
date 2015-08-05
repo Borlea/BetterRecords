@@ -14,8 +14,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityLazer extends TileEntity implements IRecordWire, IRecordAmplitude, IUpdatePlayerListBox {
 	public ArrayList<RecordConnection> connections = null;
@@ -64,7 +62,6 @@ public class TileEntityLazer extends TileEntity implements IRecordWire, IRecordA
 	}
 	
 	public void update() {
-		
 		if(bass > 0F)
 			bass--;
 		if(bass < 0F)

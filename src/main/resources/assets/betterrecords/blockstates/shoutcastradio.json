@@ -1,5 +1,9 @@
 {
     "variants": {
-        "normal": { "model": "betterrecords:shoutcastradio" }
+		"normal": { "model": "betterrecords:shoutcastradio" },
+		"facing=north": { "model": "betterrecords:shoutcastradio" },
+		"facing=south": { "model": "betterrecords:shoutcastradio", "y": 180 },
+		"facing=west":  { "model": "betterrecords:shoutcastradio", "y": 270 },
+		"facing=east":  { "model": "betterrecords:shoutcastradio", "y": 90 }
     }
 }

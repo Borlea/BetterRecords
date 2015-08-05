@@ -3,16 +3,11 @@ package com.codingforcookies.betterrecords.src.items;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.codingforcookies.betterrecords.src.BetterRecords;
 import com.codingforcookies.betterrecords.src.betterenums.ConnectionHelper;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWire;
 import com.codingforcookies.betterrecords.src.betterenums.IRecordWireHome;
 import com.codingforcookies.betterrecords.src.betterenums.RecordConnection;
-import com.google.common.base.Predicate;
 
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
@@ -26,8 +21,6 @@ import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, IRecordWireHome, IUpdatePlayerListBox {
 	
@@ -101,7 +94,6 @@ public class TileEntityRecordPlayer extends TileEntity implements IRecordWire, I
 		recordRotation = 0F;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public void update() {
 		if(opening) {
 			if(openAmount > -0.8F)

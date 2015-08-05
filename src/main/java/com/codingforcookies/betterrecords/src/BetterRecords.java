@@ -28,12 +28,8 @@ import com.codingforcookies.betterrecords.src.items.TileEntityStrobeLight;
 import com.codingforcookies.betterrecords.src.packets.ChannelHandler;
 import com.codingforcookies.betterrecords.src.packets.PacketHandler;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -105,36 +101,21 @@ public class BetterRecords {
 	public void init(FMLInitializationEvent event) {
 		PacketHandler.channels = NetworkRegistry.INSTANCE.newChannel("BetterRecords", new ChannelHandler());
 		GameRegistry.registerItem(itemURLRecord, "urlrecord");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemURLRecord, 0, new ModelResourceLocation(ID + ":urlrecord", "inventory"));
 		GameRegistry.registerItem(itemURLMultiRecord, "urlmultirecord");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemURLMultiRecord, 0, new ModelResourceLocation(ID + ":urlmultirecord", "inventory"));
 		GameRegistry.registerItem(itemFreqCrystal, "freqcrystal");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemFreqCrystal, 0, new ModelResourceLocation(ID + ":freqcrystal", "inventory"));
 		GameRegistry.registerItem(itemRecordWire, "recordwire");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemRecordWire, 0, new ModelResourceLocation(ID + ":recordwire", "inventory"));
 		GameRegistry.registerItem(itemRecordCutters, "recordwirecutters");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemRecordCutters, 0, new ModelResourceLocation(ID + ":recordwirecutters", "inventory"));
 		
 		GameRegistry.registerBlock(blockRecordEtcher, "recordetcher");
-		registerRender(blockRecordEtcher);
 		GameRegistry.registerBlock(blockRecordPlayer, "recordplayer");
-		registerRender(blockRecordPlayer);
 		GameRegistry.registerBlock(blockFrequencyTuner, "frequencytuner");
-		registerRender(blockFrequencyTuner);
 		GameRegistry.registerBlock(blockRadio, "shoutcastradio");
-		registerRender(blockRadio);
 		GameRegistry.registerBlock(blockSMSpeaker, "recordspeaker.sm");
-		registerRender(blockSMSpeaker);
 		GameRegistry.registerBlock(blockMDSpeaker, "recordspeaker.md");
-		registerRender(blockMDSpeaker);
 		GameRegistry.registerBlock(blockLGSpeaker, "recordspeaker.lg");
-		registerRender(blockLGSpeaker);
 		GameRegistry.registerBlock(blockStrobeLight, "strobelight");
-		registerRender(blockStrobeLight);
 		GameRegistry.registerBlock(blockLazer, "lazer");
-		registerRender(blockLazer);
 		GameRegistry.registerBlock(blockLazerCluster, "lazercluster");
-		registerRender(blockLazerCluster);
 		
 		GameRegistry.registerTileEntity(TileEntityRecordEtcher.class, "recordetcher");
 		GameRegistry.registerTileEntity(TileEntityRecordPlayer.class, "recordplayer");
@@ -182,9 +163,5 @@ public class BetterRecords {
 
 	public static String[] getWordWrappedString(int maxWidth, String string) {
 		return WordUtils.wrap(string, maxWidth, "\n", false).replace("\\n", "\n").split("\n");
-	}
-	
-	public static void registerRender(Block block){
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(ID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
 	}
 }

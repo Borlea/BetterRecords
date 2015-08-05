@@ -17,8 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityFrequencyTuner extends TileEntity implements IInventory, IUpdatePlayerListBox {
 	public ItemStack crystal = null;
@@ -33,7 +31,6 @@ public class TileEntityFrequencyTuner extends TileEntity implements IInventory, 
 			crystal = null;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public void update() {
 		if(crystal != null)
 			crystalFloaty += 0.86F;

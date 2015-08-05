@@ -1,5 +1,13 @@
 {
     "variants": {
-        "normal": { "model": "betterrecords:lazercluster" }
+        "normal": { "model": "betterrecords:lazercluster" },
+        "facing=down" : { "model": "betterrecords:lazercluster", "x": 180, "y": 180 },
+        "facing=down_x" : { "model": "betterrecords:lazercluster", "x": 180, "y": 90 },
+        "facing=up": { "model": "betterrecords:lazercluster" },
+        "facing=up_x": { "model": "betterrecords:lazercluster", "y": 270 },
+        "facing=east": { "model": "betterrecords:lazercluster", "x": 90, "y": 90 },
+        "facing=west": { "model": "betterrecords:lazercluster", "x": 90, "y": 270 },
+        "facing=south": { "model": "betterrecords:lazercluster", "x": 90, "y": 180 },
+        "facing=north": { "model": "betterrecords:lazercluster", "x": 90 }
     }
 }

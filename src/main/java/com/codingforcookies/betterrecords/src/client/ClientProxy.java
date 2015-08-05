@@ -31,10 +31,11 @@ import com.codingforcookies.betterrecords.src.items.TileEntityRecordPlayer;
 import com.codingforcookies.betterrecords.src.items.TileEntityRecordSpeaker;
 import com.codingforcookies.betterrecords.src.items.TileEntityStrobeLight;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.Item;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -119,6 +120,21 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new BetterEventHandler());
 		FMLCommonHandler.instance().bus().register(new BetterEventHandler());
 		
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(BetterRecords.itemURLRecord, 0, new ModelResourceLocation(BetterRecords.ID + ":urlrecord", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(BetterRecords.itemURLMultiRecord, 0, new ModelResourceLocation(BetterRecords.ID + ":urlmultirecord", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(BetterRecords.itemFreqCrystal, 0, new ModelResourceLocation(BetterRecords.ID + ":freqcrystal", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(BetterRecords.itemRecordWire, 0, new ModelResourceLocation(BetterRecords.ID + ":recordwire", "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(BetterRecords.itemRecordCutters, 0, new ModelResourceLocation(BetterRecords.ID + ":recordwirecutters", "inventory"));
+		registerRender(BetterRecords.blockRecordEtcher);
+		registerRender(BetterRecords.blockRecordPlayer);
+		registerRender(BetterRecords.blockFrequencyTuner);
+		registerRender(BetterRecords.blockRadio);
+		registerRender(BetterRecords.blockSMSpeaker);
+		registerRender(BetterRecords.blockMDSpeaker);
+		registerRender(BetterRecords.blockLGSpeaker);
+		registerRender(BetterRecords.blockStrobeLight);
+		registerRender(BetterRecords.blockLazer);
+		registerRender(BetterRecords.blockLazerCluster);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRecordEtcher.class, new BlockRecordEtcherRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRecordPlayer.class, new BlockRecordPlayerRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFrequencyTuner.class, new BlockFrequencyTunerRenderer());
@@ -132,6 +148,10 @@ public class ClientProxy extends CommonProxy {
 		
 	}
 	
+	public static void registerRender(Block block){
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(block), 0, new ModelResourceLocation(BetterRecords.ID + ":" + block.getUnlocalizedName().substring(5), "inventory"));
+	}
+
 	public static void loadConfig() {
 		config = new Configuration(new File(Minecraft.getMinecraft().mcDataDir, "betterrecords/config.cfg"));
 		config.load();

@@ -16,8 +16,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordWireHome, IUpdatePlayerListBox {
 	public ArrayList<Float> formTreble = new ArrayList<Float>();
@@ -80,9 +78,7 @@ public class TileEntityRadio extends TileEntity implements IRecordWire, IRecordW
 		crystal.stackSize = 1;
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public void update() {
-		
 		if(opening) {
 			if(openAmount < 0.268F)
 				openAmount += 0.04F;
